@@ -1,0 +1,22 @@
+V5 CHANGES
+The ventilated top is integral with the enclosure. No separate lid or lid screws.
+The stacking recess and bottom nesting foot remain.
+Acer platform and its three front fan mounting patterns raised 12.7mm.
+Acer seat Z: 36.4mm; clear space below its platform: 25.4mm.
+Brick seat Z: 23.7mm; clear space below its platform: 12.7mm, unchanged.
+The front brick fan stays at its previous height.
+LCD pivot sections now continue down both sides to the bottom: 12mm wide and
+10mm thick, with the existing R1 edges. Display mounting holes, tie towers and
+video cable route remain. Equipment inserts through the rear openings.
+
+PLATES
+1: Integral enclosure frame and roof.
+2: LCD mount, front face down.
+Unsliced layout retaining the existing H2D profile. Supports and material settings
+have not been tuned; no print job has been sent.
+Power brick remains a provisional 70 x 160 x 36mm envelope.
+
+SOURCE
+build_acer_v5.py: parametric CAD generator.
+acer-dgx-enclosure-v5.scad: assembly viewer with movable LCD.
+package_plates.cjs: native two-plate Bambu project packager.

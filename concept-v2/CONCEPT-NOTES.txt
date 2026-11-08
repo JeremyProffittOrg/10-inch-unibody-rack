@@ -1,0 +1,27 @@
+V2 VENTED ENCLOSURE CONCEPT
+
+Rear loading: remove the orange retaining strip, slide brick into left bay
+and Acer into right bay on their supported shelf; refit strip with M3 hardware.
+The shelf is 5mm thick, connected to both outer walls and a central support web.
+Side guides provide 1mm nominal clearance; front stops keep units off the fans.
+Rear insertion openings: brick 80 x 90mm; Acer 160 x 90mm.
+Cable compartment below shelf: 44mm clear height (floor Z6 to shelf Z50).
+Rear cable openings and two shelf pass-throughs provide cable access.
+
+Stacking: top recess is 6mm deep with an 8mm perimeter rim.
+The bottom has a 5mm-deep inset perimeter foot, 0.5mm clearance per side.
+Load transfers through the perimeter walls/rim. No separate stacking pins.
+Side and rear ventilation remains available when stacked.
+
+Frame envelope: 280 x 251.6 x 205mm including foot.
+LCD projects 4.34mm forward; rear retaining strip projects 3mm behind shell.
+Acer position preserves 50.8mm front/rear shell extensions.
+LCD mount is supported by the roof at its top; lower/side intake remains open.
+
+Bambu assembly hides Acer/brick placeholders to expose the actual loading bays.
+OpenSCAD show_devices=true displays nominal hardware in assembled mode.
+Brick remains an UNVERIFIED 70 x 160 x 36mm placeholder.
+This is a concept assembly, not a print layout; fan models are reference only.
+Before printing, measure hardware, detail detachable LCD fixings and assembly,
+choose print splits/orientations, and verify loads, stacking fit and cooling.
+Validated: shell is one connected closed mesh; nominal bay and stack clearances.

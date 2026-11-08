@@ -1,0 +1,24 @@
+V7 CHANGES
+Rear power-bay opening enlarged to 88 x 32.1 mm, with a supporting perimeter.
+Divider passage 151.2 x 19.4 mm: 75% of the 201.6 mm clear under-shelf depth.
+Passage centered front-to-back, retaining supporting material at both ends.
+Four divider zip-tie slots relocated to the remaining end supports.
+Front DGX cable opening 112.5 x 14 mm: 75% of the 150 mm device width.
+LCD pivot moved forward 8 mm, from Y19 to Y11. The nearer Y10 position did
+not support the existing R1 fillets. LCD and module checked against four
+40 x 40 x 20 mm fan envelopes installed behind the front mounting wall,
+at Y29..49, over hinge angles 5, 15, 30, 45, 60 and 75 degrees.
+Shelf heights, overall height, filled ventilated bottom, integral roof,
+stacking registration and panel face perimeter gaps retained from v6.
+
+PLATES
+1: Integral enclosure, upright.
+2: LCD mount, front face down.
+Unsliced project retaining the existing H2D profile. Supports and material
+settings have not been tuned. No print job sent.
+Power brick envelope remains provisional at 70 x 160 x 36 mm.
+
+SOURCE
+build_acer_v7.py: parametric CAD generator.
+acer-dgx-enclosure-v7.scad: assembly viewer.
+package_plates.cjs: native two-plate project packager.

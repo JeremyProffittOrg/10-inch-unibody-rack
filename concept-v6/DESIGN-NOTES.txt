@@ -1,0 +1,23 @@
+V6 CHANGES
+Bottom filled to the underside of the stacking foot, with roof-matching vents.
+Both vent patterns: 54 openings, 14 x 20 mm, R3 corners and R1 mouth edges.
+Integral roof retained. Shell height 161.9 mm; overall including foot 166.9 mm.
+Total height reduced 12.7 mm from v5.
+Acer seat remains Z36.4 mm and its three front fans stay unchanged.
+Power shelf and power fan raised 25.4 mm; brick seat now Z49.1 mm.
+Clear space under Acer shelf 25.4 mm; under brick shelf 38.1 mm.
+LCD panel resized to retain 10 mm perimeter gaps. Full-height reinforced sides
+remain. Display screw bosses now join the nearby panel edges for support.
+Stacking registration, cable passages and strap slots retained.
+
+PLATES
+1: Integral enclosure, upright.
+2: LCD mount, front face down.
+Unsliced project retaining the existing H2D profile. Supports and material
+settings have not been tuned. No print job sent.
+Power brick envelope remains provisional at 70 x 160 x 36 mm.
+
+SOURCE
+build_acer_v6.py: parametric CAD generator.
+acer-dgx-enclosure-v6.scad: assembly viewer.
+package_plates.cjs: native two-plate project packager.

@@ -17,6 +17,22 @@ A parametric, unibody 10-inch server rack designed to 3D print in a single piece
 
 ## Designs
 
+### Stackable Acer GN100 enclosure (v8)
+
+The latest Acer design is [v8](acer-dgx-enclosure-v8.md), with an integral
+ventilated roof and bottom, a left power-brick bay, a hinged LCD mount, and a
+removable four-fan plate with M3 attachment bosses. The enclosure, LCD mount,
+and fan plate are packaged on three separate H2D plates. Earlier concepts and
+their design notes are retained for reference.
+
+Build with CadQuery using `python build_acer_v8.py`, then run
+`node concept-v8/package_plates.cjs`. Open the resulting
+`concept-v8/acer-dgx-enclosure-v8-separate-plates.3mf` in Bambu Studio.
+The SCAD assembly viewer imports those generated meshes, so run the CAD build
+before opening it. Generated meshes, STEP files and slicer projects stay local.
+This enclosure has not been verified for support-free printing; tune supports
+and material settings before printing. The brick dimensions remain provisional.
+
 ### Just a Rack (6U)
 
 | Front View | Rear View |

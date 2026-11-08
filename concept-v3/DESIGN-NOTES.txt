@@ -1,0 +1,39 @@
+V3 ENCLOSURE REVIEW
+
+Dimensions remain 280 x 251.6 x 200mm shell, with inset bottom nesting foot.
+Acer nominal size: 150 x 150 x 50.5mm. Brick placeholder: 70 x 160 x 36mm.
+The shell extends 50.8mm in front of and behind the nominal Acer.
+
+CHANGES
+- R1 structural edges; R3 vent corners and R1 vent entrance/exit lips.
+- 8mm support shelf with 3mm-deep seats; no rear retaining crossbar.
+- Device bottom stays at Z55. Lift 3mm out of the seat; clear the rounded rear entry lip to slide out.
+- Two strap paths around brick, with paired shelf slots at Y87 and Y179.
+- Central wall cable passage and tie slots between lower compartments.
+- Front video cable passage into Acer cable compartment; rear shelf passages.
+- Three front 4020 fan mounting patterns; no decorative fan mock-ups.
+- Three rear 4020 mounting patterns on removable rear carrier.
+- Fan holes use 32mm square pitch and 3.3mm M3 clearance.
+- Fan centers remain at the nominal device top: half above and half below.
+Seat walls allow 2mm per side, retaining clearance around the R1 floor blend.
+- Separate LCD plate, top horizontal M4 pivots, 4.4mm bores.
+- 2mm axial washer space on each pivot: use friction washers and lock nuts.
+- LCD is seated at 5 degrees and swings FORWARD for access.
+- Four 8mm-tall cable-tie towers on rear of LCD plate.
+- Separate ventilated lid; stacking weight transfers through shell perimeter.
+
+ASSEMBLY
+Install shelf straps, seat equipment, fit fans, route cable through front opening,
+then install rear carrier and lid. Secure LCD using two M4 friction pivot bolts.
+Use M3 bolts/nuts for fans, lid and rear carrier. Match bolt lengths to hardware.
+Allow slack at LCD pivot; tie cables to towers without preventing movement.
+The LCD and rear carrier STLs are in assembled coordinates, not print orientation.
+
+The power brick remains an unverified placeholder. Measure it before production.
+This is a review assembly, not printer-specific sliced output. Cooling and load
+capacity require physical checks. Source: build_acer_v3.py (CadQuery); the SCAD
+file is an assembled viewer with adjustable LCD angle and lid visibility.
+
+Use low-profile M3 button heads on the front fan mounts (maximum 2mm forward projection) to preserve LCD clearance.
+
+Validation passed: four valid single solids, zero detected sharp 90-degree edges; no overlap at seats or stacking interface; LCD frame clear at 5, 15, 30, 45, 60 and 75 degrees; nominal LCD module clears shell.

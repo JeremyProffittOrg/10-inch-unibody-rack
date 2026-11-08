@@ -1,0 +1,27 @@
+V8 CHANGES
+Front fan carrier is now a separate 4 mm thick printable plate.
+All four fan patterns and the 112.5 mm front cable passage are retained.
+Plate width 271.2 mm; side and bottom clearance 0.4 mm.
+Four M3 attachment positions: X12 and X268, Z18 and Z96.
+Plate clearance holes diameter 3.4 mm. Integral body bosses have 2.5 mm
+diameter, 10 mm deep blind pilot holes. TAP THESE HOLES M3 BEFORE ASSEMBLY.
+Use four M3 x 12 mm machine screws, giving nominal 8 mm engagement.
+The CAD does not contain modeled threads or heat-set inserts.
+Body mounts are 20 x 12 x 12 mm blocks fused to the enclosure side walls.
+R1 structural edges and rounded hole mouths retained.
+Open the LCD to 75 degrees to remove the fan plate forward.
+Removal checked at 0, 10, 20, 40 and 70 mm forward travel.
+Fan locations, shelf heights, cable passages, ventilated integral roof and
+filled bottom, stacking registration, and forward LCD pivot retained.
+
+PLATES
+1: Enclosure with integral mounting bosses, upright.
+2: LCD mount, front face down.
+3: Removable fan plate, flat, front face down.
+Unsliced H2D project. Supports and material settings have not been tuned.
+No print job sent. Power brick envelope remains provisional 70 x 160 x 36 mm.
+
+SOURCE
+build_acer_v8.py: parametric CAD generator.
+acer-dgx-enclosure-v8.scad: assembly viewer.
+package_plates.cjs: native three-plate Bambu project packager.

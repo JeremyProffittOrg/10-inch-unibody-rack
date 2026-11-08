@@ -17,3 +17,11 @@ tmpclaude-*
 
 # Exception: Keep source images if any exist in assets/
 !assets/*.png
+
+# Local Acer CAD exports and slicer run reports; retain generators and notes.
+/concept-*/*.step
+/concept-*/*.3mf
+/concept-*/*.json
+/concept-*/bambu-cli-*.txt
+/result.json
+__pycache__/

@@ -1,0 +1,25 @@
+ACER GN100 STACKABLE ENCLOSURE - CONCEPT ONLY
+
+Source: ../acer-dgx-stack-concept.scad
+Open acer-dgx-stack-concept.3mf in Bambu Studio as geometry.
+This is an assembled visualization, NOT a sliced or production print layout.
+Device and fan parts are reference solids; do not print them.
+
+Frame: 280 W x 251.6 D x 200 H mm, plus 5 mm stacking pegs.
+Acer: 150 x 150 x 50.5 mm, front at Y=50.8, rear at Y=200.8.
+Frame extends exactly 50.8 mm before and after the Acer.
+LCD face protrudes 4.34 mm beyond the frame front at its lower edge.
+Brick: UNVERIFIED placeholder 70 W x 160 D x 36 H mm, left of Acer.
+Cable space: 48 mm from floor top to underside of support crossmembers.
+Three 40 x 40 x 20 mm reference fans, pointing rearward.
+Fan centers equal device top heights: 91 mm brick, 105.5 mm Acer.
+LCD: 254 x 133.35 mm frame, 15 degree backward tilt, top-only support.
+Waveshare hole spacing retained: 156.9 x 114.96 mm, M3 clearance.
+Stack registration: four 5 mm tapered pegs and 6 mm deep underside sockets.
+Vertical stack load transfers through four corner posts. Open top and sides.
+
+Before production: measure brick and feet; verify Acer vents and cable bends;
+detail removable fan fasteners and LCD top fasteners; split structural frame
+into printable pieces; check interlocks with fit coupons; choose material;
+validate sustained-load cooling and stacked stability. No strength or thermal
+rating is claimed. The fan supports and LCD supports are concept geometry.

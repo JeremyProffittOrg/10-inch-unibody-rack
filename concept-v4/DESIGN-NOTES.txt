@@ -1,0 +1,22 @@
+V4: three Acer front fans plus one brick fan; no rear fan mounts.
+Shell height: 174.6mm, reduced by 25.4mm. Bottom nesting foot adds 5mm.
+Clear lower cable space: 12.7mm. Seat floor: Z23.7; shelf underside: Z18.7.
+Panel face: 252mm wide, 138.859mm tall; projected front height 138.6mm.
+Panel-to-inner-wall, floor and lid gaps: 10mm each in the 5-degree seated position.
+Pivot tabs bridge the perimeter gaps; extended from 6mm to 12mm wide.
+M4 pivot bores run through the outer shell. Allow 3mm axial spacer/washer gap.
+1mm edge rounding and R3 vent corners with R1 mouths retained.
+3mm equipment recesses, brick straps, cable tie towers and cable routes retained.
+The two requested height changes increase overhead clearance by 5.9mm.
+Brick remains a 70 x 160 x 36mm placeholder pending measurement.
+
+Separate-plates project:
+Plate 1: enclosure frame, upright on its bottom nesting foot.
+Plate 2: LCD mount, face down.
+Plate 3: removable lid, flat.
+Uses the existing local H2D project profile. Unsliced; support/material settings
+have not been tuned for these parts. No print job has been sent.
+
+Validation: three valid single solids; zero detected sharp right-angle edges;
+no seated-device or stacking overlap; LCD frame and module clear shell and lid
+at the checked 5, 15, 30, 45, 60 and 75 degree positions.
