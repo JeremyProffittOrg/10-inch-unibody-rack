@@ -1,0 +1,33 @@
+V9 NEW VERTICAL LAYOUT
+Power brick below the Acer, with 12.7 mm clearance above the brick.
+Brick envelope: 70 x 160 x 36 mm, carried over provisionally from v8.
+Minimum clear side aisle beside brick: 63 mm, exceeding the 25.4 mm minimum.
+Brick bottom Z9; both lower 40 x 40 x 20 fan bottoms also Z9.
+Lower fan centers X77 and X127; each outer edge extends 10 mm (one quarter
+of its 40 mm width) beyond the corresponding brick edge.
+Three upper Acer fan mounts retained. Fan plate mounts INSIDE at Y28..32.
+Fan bodies occupy Y32..52; equipment starts at Y58.
+DGX rear Z-independent cable allowance: 50.8 mm plus rear edge margin.
+Both side walls bow outward 12 mm at mid-depth; maximum width 228 mm.
+Overall depth 262.8 mm, height including stacking foot 162 mm.
+Integral ventilated roof and bottom; rear stays open for loading/exhaust.
+DGX shelf includes two pairs of strap slots. Two brick straps pass through
+the case bottom; their underside runs sit in 3 mm deep recessed channels.
+
+LCD AND FAN PANELS
+Fixed removable LCD panel replaces the hinge. Four front-access M3 screws.
+LCD panel face 186 x 131 x 4 mm, with 5 mm gap on all four sides.
+LCD uses existing Waveshare 7-inch HDMI LCD (B) mounting dimensions.
+Two cable tie towers retained on the back of the LCD panel.
+Fan plate is 164 x 127.75 x 4 mm; its narrower width passes between the
+LCD mounting bosses for forward removal after the LCD panel is removed.
+Both panels use four M3 x 12 screws, 3.4 mm clearance holes and 2.5 mm
+diameter, 10 mm deep body pilot holes. Tap the body pilots M3 before fitting.
+No printed threads or heat-set inserts are modeled.
+
+PRINT PLATES
+1. Bowed enclosure, upright.
+2. LCD panel, front face down.
+3. Internal fan plate, front face down.
+Unsliced H2D project; support and material settings need tuning.
+No print job sent. Verify actual brick size and printed fit before use.

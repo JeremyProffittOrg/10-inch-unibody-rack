@@ -17,9 +17,68 @@ A parametric, unibody 10-inch server rack designed to 3D print in a single piece
 
 ## Designs
 
+### Diamond-ventilated Acer enclosure (v13)
+
+| Front | Rear |
+|---|---|
+| ![Front](concept-v13/acer-dgx-enclosure-v13_front.png) | ![Rear](concept-v13/acer-dgx-enclosure-v13_rear.png) |
+
+[v13](acer-dgx-enclosure-v13.md) adds front-to-back diamond vents and a separately
+printed DGX shelf, with ramped shelf mounts, nesting feet and strap-channel
+ends. Its four-plate project includes a repeatable Bambu automatic-support audit.
+
+### Stronger-bow Acer enclosure with print ramps (v12)
+
+| Front | Rear |
+|---|---|
+| ![Front](concept-v12/acer-dgx-enclosure-v12_front.png) | ![Rear](concept-v12/acer-dgx-enclosure-v12_rear.png) |
+
+[v12](acer-dgx-enclosure-v12.md) deepens the side bow to 22 mm, adds 12.7 mm
+DGX side channels, and adds 30-degree mount ramps plus 45-degree pocket
+lead-ins. Its three-plate project places the enclosure rear-face-down.
+
+### Extended vertical-bow Acer enclosure (v11)
+
+| Front | Rear |
+|---|---|
+| ![Front](concept-v11/acer-dgx-enclosure-v11_front.png) | ![Rear](concept-v11/acer-dgx-enclosure-v11_rear.png) |
+
+[v11](acer-dgx-enclosure-v11.md) matches the LCD panel outline to the vertical
+side bow and extends the front by 19.05 mm for more LCD-to-fan clearance.
+Build with `python build_acer_v11.py` and `node concept-v11/package_plates.cjs`.
+
+### Acer enclosure with thicker recessed supports (v10 / v10b)
+
+| Front | Rear |
+|---|---|
+| ![Front](concept-v10/acer-dgx-enclosure-v10_front.png) | ![Rear](concept-v10/acer-dgx-enclosure-v10_rear.png) |
+
+[v10 and v10b](acer-dgx-enclosure-v10.md) add LCD-mount clearance notches to
+the removable fan panel, double the bottom and DGX shelf thicknesses, and add
+3 mm device locating pockets.
+| Vertical bow front | Vertical bow rear |
+|---|---|
+| ![Front](concept-v10b/acer-dgx-enclosure-v10b_front.png) | ![Rear](concept-v10b/acer-dgx-enclosure-v10b_rear.png) |
+
+Variant A bows front-to-back; variant B rotates
+the bow 90 degrees to run bottom-to-top. The comparison project has six plates,
+one per part for each version.
+
+### Bowed Acer enclosure with power below DGX (v9)
+
+| Front | Rear |
+|---|---|
+| ![Front](concept-v9/acer-dgx-enclosure-v9_front.png) | ![Rear](concept-v9/acer-dgx-enclosure-v9_rear.png) |
+
+[The v9 layout](acer-dgx-enclosure-v9.md) stacks the power brick beneath the
+DGX, with two aligned brick fans, three upper fans, recessed strap channels,
+bowed sides, and a four-screw LCD panel with a 5 mm intake gap. Build using
+`python build_acer_v9.py` and `node concept-v9/package_plates.cjs` to produce
+three separate H2D plates. The previous side-by-side v8 design remains below.
+
 ### Stackable Acer GN100 enclosure (v8)
 
-The latest Acer design is [v8](acer-dgx-enclosure-v8.md), with an integral
+The side-by-side Acer design is [v8](acer-dgx-enclosure-v8.md), with an integral
 ventilated roof and bottom, a left power-brick bay, a hinged LCD mount, and a
 removable four-fan plate with M3 attachment bosses. The enclosure, LCD mount,
 and fan plate are packaged on three separate H2D plates. Earlier concepts and

@@ -25,3 +25,7 @@ tmpclaude-*
 /concept-*/bambu-cli-*.txt
 /result.json
 __pycache__/
+
+# Generated slicer toolpaths and local build diagnostics
+/concept-*/*.gcode
+/concept-*/*-log.txt
