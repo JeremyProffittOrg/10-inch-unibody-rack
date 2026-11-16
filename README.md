@@ -17,6 +17,25 @@ A parametric, unibody 10-inch server rack designed to 3D print in a single piece
 
 ## Designs
 
+### Four-bay Acer GN100 shelves
+
+| Front View | Rear View |
+|------------|-----------|
+| ![Front](https://github.com/JeremyProffittOrg/10-inch-unibody-rack/releases/latest/download/acer-four-bay-shelves_front.png) | ![Rear](https://github.com/JeremyProffittOrg/10-inch-unibody-rack/releases/latest/download/acer-four-bay-shelves_rear.png) |
+
+Four DGX bays with left power-brick pockets, five 5 mm shelves, 22 mm above each
+DGX, twelve rear 40 mm fan mounts, and cable passages through every shelf.
+Printed rack: 298 W x 315 H x 229.8 D mm; rear-face-down STL fits the H2D.
+The 72 x 162 x 23 mm Delta brick dimensions are published; the exact Acer OEM
+adapter match and physical print fit remain unconfirmed.
+
+**Documentation**: [acer-four-bay-shelves.md](acer-four-bay-shelves.md)
+
+**Download STL**: [acer-four-bay-shelves.stl](https://github.com/JeremyProffittOrg/10-inch-unibody-rack/releases/latest/download/acer-four-bay-shelves.stl)
+
+Build detailed diagrams and mesh checks with `python build_acer_four_bay.py`.
+
+
 ### Diamond-ventilated Acer enclosure (v13)
 
 | Front | Rear |
