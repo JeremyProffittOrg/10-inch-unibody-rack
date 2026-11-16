@@ -20,6 +20,13 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y openscad xvfb
 
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install existing CadQuery build dependency
+        run: python -m pip install cadquery==2.8.0
+
       - name: Build STLs and PNGs
         run: xvfb-run -a bash build.sh
 

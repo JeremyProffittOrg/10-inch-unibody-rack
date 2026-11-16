@@ -9,6 +9,9 @@ echo "Creating output directories..."
 mkdir -p "${OUTPUT_DIR}/stl"
 mkdir -p "${OUTPUT_DIR}/images"
 
+echo "Building rounded Acer shelf geometry..."
+python3 acer_four_bay_geometry.py || exit 1
+
 # Process all SCAD files
 for scad_file in *.scad; do
     # Skip if no .scad files found

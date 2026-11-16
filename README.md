@@ -24,7 +24,10 @@ A parametric, unibody 10-inch server rack designed to 3D print in a single piece
 | ![Front](https://github.com/JeremyProffittOrg/10-inch-unibody-rack/releases/latest/download/acer-four-bay-shelves_front.png) | ![Rear](https://github.com/JeremyProffittOrg/10-inch-unibody-rack/releases/latest/download/acer-four-bay-shelves_rear.png) |
 
 Four DGX bays with left power-brick pockets, five 5 mm shelves, 22 mm above each
-DGX, twelve rear 40 mm fan mounts, and cable passages through every shelf.
+DGX, twelve rear 40 mm fan mounts, and rounded cable windows through every shelf.
+DGX fans sit at the far edges of the full device-and-side-gap lane. All edges
+have 0.5 mm fillets; windows have 3 mm inside corner radii. Wide window spans
+may require print supports.
 Printed rack: 298 W x 315 H x 229.8 D mm; rear-face-down STL fits the H2D.
 The 72 x 162 x 23 mm Delta brick dimensions are published; the exact Acer OEM
 adapter match and physical print fit remain unconfirmed.
@@ -33,7 +36,8 @@ adapter match and physical print fit remain unconfirmed.
 
 **Download STL**: [acer-four-bay-shelves.stl](https://github.com/JeremyProffittOrg/10-inch-unibody-rack/releases/latest/download/acer-four-bay-shelves.stl)
 
-Build detailed diagrams and mesh checks with `python build_acer_four_bay.py`.
+Build detailed diagrams and mesh checks with `python build_acer_four_bay.py`
+(CadQuery 2.8.0 and Matplotlib required). The SCAD file views the generated mesh.
 
 
 ### Diamond-ventilated Acer enclosure (v13)

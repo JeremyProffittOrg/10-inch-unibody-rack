@@ -78,3 +78,33 @@ Definition of done: git diff --check exits 0, GitHub workflow terminal success, 
 - 2026-11-16: GitHub Build and Release run 43880478356 completed SUCCESS. Verified release assets acer-four-bay-shelves.stl (673884 bytes), front PNG (31411 bytes), rear PNG (30184 bytes). Native model source is unchanged by subsequent local verification-script improvements.
 
 - 2026-11-16: Optional Bambu support audit exceeded its 600-second limit without a sliced project, result.json, or captured output. Terminated only own audit PID 22712. No retry. Support-free slicing remains UNVERIFIED; earlier requested GUI STL launch is separate and left running.
+
+## Rounded revision locked decisions (user-confirmed; do not revisit)
+- 2026-11-16: "move the fans to the far left and right of the dgx including thed 22mm spacing"
+- 2026-11-16: "wiring hole should not be a diamond"; width 80% of the respective device; start 12.7 mm behind that device and end 25.4 mm before the rack rear; rounded inside.
+- 2026-11-16: "make sure all edges are rounded"; open in a different Bambu Studio copy.
+- 2026-11-16: fit-test STL has a 2 mm base, 10 mm walls above it, trimmed from the PSU left retainer to the DGX right retainer, with full outer front/back/side perimeter.
+
+## rounded-shelves — relocate fans and round all model edges
+- [x] fit-test-coupon — generated output/acer-fit-test/acer-fit-test.stl; closed mesh and 251.2 x 169.2 x 12 mm bounds checked; Bambu CLI PID 26188. Source pocket snapshot retained with generated coupon to keep its geometry reproducible.
+- [x] rounded-geometry — reuse existing CadQuery dependency to replace sharp SCAD construction; one geometry implementation plus SCAD mesh viewer. Keep device pockets, outer dimensions and shelf spacing.
+- [x] rounded-proof — valid single CAD solid, no sharp CAD edges, closed STL, unchanged printer bounds, 80% cable widths, correct endpoints, device insertion clear.
+- [x] rounded-diagrams — update plan/rear/assembly diagrams and documentation.
+- [~] rounded-delivery — commit/push, monitor release, launch revised STL in a separate Bambu process through CLI.
+Definition of done: C:/Users/Jeremy/.local/bin/uv.exe run --python 3.13 --with cadquery --with matplotlib python build_acer_four_bay.py exits 0; resulting release succeeds.
+Files: acer-four-bay-shelves.scad (viewer), acer_four_bay_geometry.py (replacement CAD implementation), build_acer_four_bay.py, build.sh, generate.bat, .github/workflows/release.yml (existing dependency setup), design documentation, README, plan.md.
+Non-goals: change the fit-test STL already opened; change device dimensions or outer rack size.
+Geometry choices: 0.5 mm edge fillets throughout, 3 mm plan radii inside cable windows; fan bodies occupy the far edges of the DGX+44 mm lane, centre X=119 and273. PSU fan X=63 stays unchanged. Right outer wall replaces the redundant rightmost fan post. Large rectangular cable windows override the earlier diamond support-free geometry; no support-free claim.
+
+### rounded-restart-policy
+- Native CAD build: log exit/failure, 10-minute limit; diagnose deterministic failure before retry, at most two corrected retries per failing geometry.
+- Release: existing pipeline, monitor failure and success; no blind retries.
+- Bambu launch: separate new process, preserve all existing sessions; no GUI or desktop-control verification.
+
+### rounded-execution-log
+- 2026-11-16: One-bay proof found a 1 mm redundant fan-post overlap at the right outer wall. Removed that redundant post; the wall directly supports the mount. All 310 remaining sharp edges accepted 0.5 mm fillets; valid one-solid result, zero remaining discontinuities.
+
+- 2026-11-16: Full four-bay native CAD succeeded: 1,108 edges rounded at R0.5, one valid solid, zero sharp edges. Print-scale STL tessellation uses 0.15 mm deflection and 0.35 rad angular tolerance. Binary float32 encoding collapsed 136 zero-area facets; exporter removes only zero-area facets, then independent closed-manifold/winding/component checks passed. All eight device and insertion paths plus both cable routes passed.
+- 2026-11-16: Full final rounded build started PID 29804; CAD dependency pinned to the locally verified 2.8.0 for CI.
+
+- 2026-11-16: Final rounded build exited 0: uv run --python 3.13 --with cadquery==2.8.0 --with matplotlib python -u build_acer_four_bay.py. CAD, mesh, dimensions, 80% window geometry, device insertion and cable path checks passed; all diagrams rendered and visually checked. Revised STL launched in distinct Bambu CLI PID 55644; fit-test process PID 26188 remains separate.
