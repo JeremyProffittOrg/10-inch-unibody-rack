@@ -1,6 +1,9 @@
 """Build, check and diagram the four-bay Acer shelves. Requires matplotlib."""
 from pathlib import Path
 import collections, json, math, os, struct, subprocess, sys
+# Small geometric checks do not need a machine-wide BLAS thread pool.
+os.environ['OPENBLAS_NUM_THREADS']='1'
+os.environ['OMP_NUM_THREADS']='1'
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -14,10 +17,16 @@ OPENSCAD=Path('C:/Program Files/OpenSCAD/openscad.com') if os.name=='nt' else Pa
 FLAGS=subprocess.CREATE_NO_WINDOW if os.name=='nt' else 0
 
 def command(args,name):
+    args=list(args);final_image=None
+    if '-o' in args:
+        index=args.index('-o')+1
+        if str(args[index]).endswith('.png'):
+            final_image=Path(args[index]);args[index]=final_image.with_name(final_image.stem+'-writing.png')
     result=subprocess.run([str(OPENSCAD),*map(str,args)],cwd=ROOT,text=True,capture_output=True,timeout=600,creationflags=FLAGS)
     (OUT/(name+'.log')).write_text(result.stdout+result.stderr,encoding='utf8')
     if result.returncode or 'ERROR:' in result.stderr:
         raise RuntimeError(name+': '+result.stdout+result.stderr)
+    if final_image is not None:os.replace(args[index],final_image)
     return result.stdout+result.stderr
 
 print('Building one-piece shelf assembly',flush=True)
@@ -69,7 +78,31 @@ assert len({find(v) for v in parents})==1,'Disconnected geometry'
 assert volume>0,'Inverted solid'
 for measured,expected in zip([hi[i]-lo[i] for i in range(3)],[H,W,D]):assert abs(measured-expected)<.01
 assert min(lo)>-.01
-report={'passed':True,'triangle_count':count,'closed_manifold':True,'connected_components':1,'positive_volume_mm3':volume,'print_bounds_mm':[H,W,D],'assembly_bounds_mm':[W,H,D],'shelves':5,'retaining_pockets':8,'fan_mounts':12,'screw_holes':48,'cable_passages':10,'top_air_gap_mm':gap,'rear_extension_mm':76.2,'psu_model':'Delta ADP-240KB BA','psu_body_wdh_mm':[pw,pd,ph],'acer_oem_match':'UNCONFIRMED','support_free':'designed for rear-down print; slicer and physical test not yet performed','metadata':metadata}
+# Triangle/box separating-axis checks use the actual exported STL in use coordinates.
+import numpy as np
+raw=np.array([[struct.unpack_from('<fff',data,84+50*i+12+12*j) for j in range(3)] for i in range(count)])
+tri=np.stack((raw[:,:,1],raw[:,:,0],D-raw[:,:,2]),axis=2)
+def clear_box(low,high,label):
+    centre=(np.array(low)+np.array(high))/2;half=(np.array(high)-np.array(low))/2
+    v=tri-centre
+    active=np.all(np.min(v,axis=1)<=half,axis=1)&np.all(np.max(v,axis=1)>=-half,axis=1)
+    edges=[v[:,1]-v[:,0],v[:,2]-v[:,1],v[:,0]-v[:,2]]
+    axes=[np.cross(edges[0],edges[1])]+[np.cross(e,b) for e in edges for b in np.eye(3)]
+    for axis in axes:
+        proj=np.einsum('nij,nj->ni',v,axis);radius=np.abs(axis)@half
+        active &= (np.min(proj,axis=1)<=radius+1e-8)&(np.max(proj,axis=1)>=-radius-1e-8)
+    assert not np.any(active),label+' intersects printed geometry'
+for bay in range(4):
+    base=5+bay*pitch
+    for x,w,d,h,label in [(px,pw,pd,ph,'PSU'),(dx,dw,dd,dh,'DGX')]:
+        clear_box([x+.05,base+.05,front+.05],[x+w-.05,base+h-.05,front+d-.05],label+' seated')
+        lift=gh+fit
+        clear_box([x+.05,base+lift+.05,-d],[x+w-.05,base+lift+h-.05,front+d-.05],label+' front insertion path')
+clear_box([dx+dw/2-9,-1,cz-9],[dx+dw/2+9,H+1,cz+9],'DGX vertical cable path')
+clear_box([px+pw/2-7,-1,cz-9],[px+pw/2+7,H+1,cz+9],'PSU vertical cable path')
+print('PASS: eight nominal device fits, eight lifted insertion paths, two full-height cable paths',flush=True)
+
+report={'device_fit_and_insertion_paths':True,'vertical_cable_paths':True,'passed':True,'triangle_count':count,'closed_manifold':True,'connected_components':1,'positive_volume_mm3':volume,'print_bounds_mm':[H,W,D],'assembly_bounds_mm':[W,H,D],'shelves':5,'retaining_pockets':8,'fan_mounts':12,'screw_holes':48,'cable_passages':10,'top_air_gap_mm':gap,'rear_extension_mm':76.2,'psu_model':'Delta ADP-240KB BA','psu_body_wdh_mm':[pw,pd,ph],'acer_oem_match':'UNCONFIRMED','support_free':'designed for rear-down print; slicer and physical test not yet performed','metadata':metadata}
 (OUT/'validation.json').write_text(json.dumps(report,indent=2))
 
 ink='#0f172a';steel='#64748b';blue='#0369a1';gold='#fcd34d'
@@ -85,7 +118,9 @@ def dim(ax,a,b,label,offset=(0,0)):
 
 def save(fig,name,notes):
     for i,note in enumerate(notes):fig.text(.08,.115-i*.028,note,fontsize=10,color=ink)
-    fig.savefig(OUT/(name+'.png'),dpi=170,facecolor='white');plt.close(fig)
+    temporary=OUT/(name+'-writing.png')
+    fig.savefig(temporary,dpi=170,facecolor='white');plt.close(fig)
+    os.replace(temporary,OUT/(name+'.png'))
 
 def frame(ax):
     for x in [0,W-5]:ax.add_patch(Rectangle((x,0),5,H,facecolor=steel))

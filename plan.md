@@ -37,8 +37,8 @@ Depends on: shelf-source
 - [x] shelf-drawings — front/rear 1024 PNGs, dimensioned front/top/rear/detail PNGs and corresponding MD/README.
 Definition of done: build command above exits 0 and output/acer-four-bay/validation.json reports passed=true.
 ### shelf-publication — commit, push and monitor
-- [ ] shelf-commit — stage only the new design, its script/docs, README and plan; commit and push master.
-- [ ] shelf-workflow — monitor resulting GitHub Build and Release workflow to terminal success.
+- [x] shelf-commit — stage only the new design, its script/docs, README and plan; commit and push master.
+- [x] shelf-workflow — monitor resulting GitHub Build and Release workflow to terminal success.
 - [x] shelf-open — invoke Bambu Studio CLI with only the final shelf assembly STL; no desktop control.
 Definition of done: git diff --check exits 0, GitHub workflow terminal success, Bambu CLI launch returns no launch error.
 
@@ -63,3 +63,18 @@ Definition of done: git diff --check exits 0, GitHub workflow terminal success, 
 - 2026-11-16: gh auth status reports no login; git fetch origin master succeeds. Delivery monitoring will use the public GitHub API if push succeeds. No credential values were read.
 
 - 2026-11-16: Launched final STL through Bambu Studio CLI, PID 7268. No desktop control. Import completion is not asserted without UI evidence. Upright CAD rear render exited 0; CAD renderer replaces the temporary Matplotlib surface renderer.
+
+- 2026-11-16: Focused commit 11ced752c4c71732c7c6e00f141819984ad2a7e0 pushed successfully using existing Git credentials. GitHub run 43880478356 is monitored through the public API; currently building artifacts.
+- 2026-11-16: Exact STL triangle/box SAT checks passed for eight device envelopes, eight raised front-insertion paths and two unobstructed vertical cable corridors. Three detail PNGs opened via CLI.
+
+- 2026-11-16: Final full rebuild failed during OpenBLAS import with memory allocation error. Set OPENBLAS_NUM_THREADS=1 and OMP_NUM_THREADS=1 inside the build process before numeric imports; bounded corrected retry PID 28892.
+
+- 2026-11-16: Numeric thread bound succeeded; final retry passed all mesh and fit checks but Pillow could not overwrite open shelf-plan.png (Errno 22). Changed PNG generation to write sibling temporary PNGs then atomically replace completed outputs. Second corrected retry PID 42044; no user applications closed.
+
+- 2026-11-16: Full final build exited 0 after atomic PNG write fix. One-time support audit started PID 22712; normal automatic supports at 45 degrees, max 5 mm bridge, 10-minute timeout ceiling, no blind retry.
+
+- 2026-11-16: Final command C:/Users/Jeremy/.local/bin/uv.exe run --python 3.13 --with matplotlib python -u build_acer_four_bay.py exited 0. All mesh, fit, insertion, cable and render checks passed. This run verified both single-thread numerical imports and atomic PNG replacement with viewers left open.
+
+- 2026-11-16: GitHub Build and Release run 43880478356 completed SUCCESS. Verified release assets acer-four-bay-shelves.stl (673884 bytes), front PNG (31411 bytes), rear PNG (30184 bytes). Native model source is unchanged by subsequent local verification-script improvements.
+
+- 2026-11-16: Optional Bambu support audit exceeded its 600-second limit without a sliced project, result.json, or captured output. Terminated only own audit PID 22712. No retry. Support-free slicing remains UNVERIFIED; earlier requested GUI STL launch is separate and left running.

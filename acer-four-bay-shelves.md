@@ -101,7 +101,7 @@ The device retainers have full side guides and short front/rear corner returns. 
 
 Print the complete supplied STL rear-face-down, as exported. The shelves print on their edges, not as broad horizontal ceilings. Front-facing ends of cable passages close at 45 degrees or less, and the retaining guides have 45-degree rear ramps. Fan and screw holes run along the print axis. The short 5 mm corner returns use the project's allowed bridge span.
 
-The design is intended for support-free printing, but automatic-support slicing and a physical print have not been verified. The build checker validates closed manifold mesh, consistent face orientation, one connected component, positive volume and measured printer bounds. It does not prove structural load capacity or cooling performance. Start from the existing H2D 0.20 mm profile and inspect layer preview before printing.
+The design is intended for support-free printing, but automatic-support slicing and a physical print have not been verified. A one-time Bambu CLI audit with supports enabled at 45 degrees and a 5 mm bridge limit produced no sliced project within 600 seconds and was stopped; it is not a passing support audit. The build checker validates closed manifold mesh, consistent face orientation, one connected component, positive volume and measured printer bounds. Triangle/box intersection checks also confirm all eight nominal device envelopes, lifted front insertion paths and two continuous vertical cable paths are free of printed geometry. It does not prove structural load capacity or cooling performance. Start from the existing H2D 0.20 mm profile and inspect layer preview before printing.
 
 Build from the repository root:
 
