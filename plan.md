@@ -90,7 +90,7 @@ Definition of done: git diff --check exits 0, GitHub workflow terminal success, 
 - [x] rounded-geometry — reuse existing CadQuery dependency to replace sharp SCAD construction; one geometry implementation plus SCAD mesh viewer. Keep device pockets, outer dimensions and shelf spacing.
 - [x] rounded-proof — valid single CAD solid, no sharp CAD edges, closed STL, unchanged printer bounds, 80% cable widths, correct endpoints, device insertion clear.
 - [x] rounded-diagrams — update plan/rear/assembly diagrams and documentation.
-- [~] rounded-delivery — commit/push, monitor release, launch revised STL in a separate Bambu process through CLI.
+- [x] rounded-delivery — commit/push, monitor release, launch revised STL in a separate Bambu process through CLI.
 Definition of done: C:/Users/Jeremy/.local/bin/uv.exe run --python 3.13 --with cadquery --with matplotlib python build_acer_four_bay.py exits 0; resulting release succeeds.
 Files: acer-four-bay-shelves.scad (viewer), acer_four_bay_geometry.py (replacement CAD implementation), build_acer_four_bay.py, build.sh, generate.bat, .github/workflows/release.yml (existing dependency setup), design documentation, README, plan.md.
 Non-goals: change the fit-test STL already opened; change device dimensions or outer rack size.
@@ -108,3 +108,9 @@ Geometry choices: 0.5 mm edge fillets throughout, 3 mm plan radii inside cable w
 - 2026-11-16: Full final rounded build started PID 29804; CAD dependency pinned to the locally verified 2.8.0 for CI.
 
 - 2026-11-16: Final rounded build exited 0: uv run --python 3.13 --with cadquery==2.8.0 --with matplotlib python -u build_acer_four_bay.py. CAD, mesh, dimensions, 80% window geometry, device insertion and cable path checks passed; all diagrams rendered and visually checked. Revised STL launched in distinct Bambu CLI PID 55644; fit-test process PID 26188 remains separate.
+
+- 2026-11-16: Commit d695d9a2a4974278f0b63f2209f8fa427770b4ea pushed. Release run 43927698784 is in progress; dependency setup completed and artifact build is active. Confirmed separate running Bambu processes 26188 (fit test) and 55644 (rounded shelves) through read-only process queries, not desktop control.
+
+- 2026-11-16: Windows generate.bat now selects the existing local uv executable when available, using the same pinned CadQuery command already verified in the full build. This avoids requiring python on PATH on this machine; Linux CI remains unchanged.
+
+- 2026-11-16: Release run 43927698784 completed SUCCESS. Downloaded published STL: 9,973,084 bytes, 199,460 triangles, bounds 315 x 298 x 229.800006 mm; binary length and bounds passed. Front/rear release PNGs also present. Geometry unchanged by the Windows entry-point follow-up.

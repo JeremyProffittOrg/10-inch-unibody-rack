@@ -10,7 +10,11 @@ if not exist %OUTPUT_DIR%\stl mkdir %OUTPUT_DIR%\stl
 if not exist %OUTPUT_DIR%\images mkdir %OUTPUT_DIR%\images
 
 REM Build the rounded shelf mesh before its SCAD viewer is rendered.
-python acer_four_bay_geometry.py
+if exist "%USERPROFILE%\.local\bin\uv.exe" (
+    "%USERPROFILE%\.local\bin\uv.exe" run --python 3.13 --with cadquery==2.8.0 python acer_four_bay_geometry.py
+) else (
+    python acer_four_bay_geometry.py
+)
 if errorlevel 1 exit /b 1
 
 REM Process all SCAD files
