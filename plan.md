@@ -135,7 +135,7 @@ Implementation assumptions: device and rear-feature positions shift +25.4 mm in 
 ### front-extension-delivery — open verified export and publish
 Depends on: front-extension-model
 - [x] front-extension-open — verify current build report and STL dimensions before spawning C:/Program Files/Bambu Studio/bambu-studio.exe with output/acer-four-bay/acer-four-bay-shelves.stl. Successful spawn; UI import not asserted.
-- [ ] front-extension-publish — git diff --check exit 0; focused commit/push to master; GitHub workflow terminal success.
+- [x] front-extension-publish — git diff --check exit 0; focused commit/push to master; GitHub workflow terminal success.
 
 ### front-extension-job-policy
 Build: hidden process with captured stdout/stderr/exit status, 10-minute timeout. At most two corrected retries; deterministic errors require a fix first. No blind retries. Track PID in this log.
@@ -150,3 +150,7 @@ Stop conditions: missing push credentials, irreversible unrelated action, confir
 
 - 2026-11-20: Full build exited 0. CAD one solid/zero sharp edges; STL 190364 triangles, closed manifold/single component; dimensions 315 x 298 x 255.2 mm. Eight seated fits, eight insertion paths, two vertical cable paths, four PSU rear openings passed. Native solid checks verified full front stops and 25 mm shell thickness. Shelf diagram visually inspected.
 - 2026-11-20: Verified current validation fields and binary STL length before Bambu launch. CLI spawn succeeded, PID 28456. GUI import is unverified; no desktop control used.
+
+- 2026-11-20: git diff --cached --check passed. Focused commit c03ce5668cb3857928d6959ab07677cb73e79f71 pushed to master. Build and Release run 44728565927 monitored via public GitHub API.
+
+- 2026-11-20: Build and Release run 44728565927 completed SUCCESS. Downloaded published STL: 9,518,284 bytes, 190,364 triangles, 315 x 298 x 255.199994 mm bounds; binary length and requested dimensions passed. Both updated release PNGs present. Repository preview commit fast-forwarded; unrelated user edits preserved.
