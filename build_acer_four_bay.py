@@ -37,6 +37,11 @@ W,H,D,pitch,gap=metadata['dimensions']
 pw,pd,ph,dw,dd,dh,px,dx,front=metadata['devices']
 gh,gt,fit,corner,cz,cw,cpw,cd=metadata['features']
 fc,fy,fd,fp,sd,fm=metadata['fans']
+revision=metadata['revision']
+wall=revision['outer_wall_mm']
+assert abs(W-298)<1e-5 and abs(D-255.2)<1e-5
+assert wall==25 and revision['front_extension_mm']==25.4
+assert abs(front-29)<1e-5 and abs(revision['psu_rear_open_mm']-36.6)<1e-5
 assert abs(H-315)<1e-5 and abs(gap-22)<1e-5
 assert abs(D-(front+dd+76.2))<1e-5
 assert H<=325 and W<=320 and D<=325
@@ -45,7 +50,8 @@ assert win['dgx'][0]==.8*dw and win['psu'][0]==.8*pw
 for key,device_depth in [('dgx',dd),('psu',pd)]:
     assert abs(win[key][1]-(front+device_depth+12.7))<1e-5
     assert abs(win[key][2]-(D-25.4))<1e-5
-assert fc==[px+pw/2,dx-22+20,dx+dw+22-20]
+assert fc==[63,139,253]
+assert all(wall<cx-fd/2 and cx+fd/2<W-wall for cx in fc)
 assert metadata['cad_validation']['sharp_edges']==0
 
 # Independently validate the exported mesh, not only source assertions.
@@ -101,12 +107,18 @@ for bay in range(4):
         clear_box([x+.05,base+.05,front+.05],[x+w-.05,base+h-.05,front+d-.05],label+' seated')
         lift=gh+fit
         clear_box([x+.05,base+lift+.05,-d],[x+w-.05,base+lift+h-.05,front+d-.05],label+' front insertion path')
+for bay in range(4):
+    base=5+bay*pitch
+    opening=revision['psu_rear_open_mm']
+    back=front+pd+fit
+    clear_box([px+pw/2-opening/2+.05,base+.55,back-.1],
+              [px+pw/2+opening/2-.05,base+gh-.55,back+gt+.1],'PSU rear middle opening')
 clear_box([dx+dw/2-9,-1,cz-9],[dx+dw/2+9,H+1,cz+9],'DGX vertical cable path')
 pcz=(win['psu'][1]+win['psu'][2])/2
 clear_box([px+pw/2-7,-1,pcz-9],[px+pw/2+7,H+1,pcz+9],'PSU vertical cable path')
 print('PASS: eight nominal device fits, eight lifted insertion paths, two full-height cable paths',flush=True)
 
-report={'device_fit_and_insertion_paths':True,'vertical_cable_paths':True,'passed':True,'triangle_count':count,'closed_manifold':True,'connected_components':1,'positive_volume_mm3':volume,'print_bounds_mm':[H,W,D],'assembly_bounds_mm':[W,H,D],'shelves':5,'retaining_pockets':8,'fan_mounts':12,'screw_holes':48,'cable_passages':10,'top_air_gap_mm':gap,'rear_extension_mm':76.2,'psu_model':'Delta ADP-240KB BA','psu_body_wdh_mm':[pw,pd,ph],'acer_oem_match':'UNCONFIRMED','support_free':'NOT claimed: wide rounded cable windows can require support in rear-down orientation','all_cad_edges_rounded':True,'metadata':metadata}
+report={'device_fit_and_insertion_paths':True,'vertical_cable_paths':True,'passed':True,'triangle_count':count,'closed_manifold':True,'connected_components':1,'positive_volume_mm3':volume,'print_bounds_mm':[H,W,D],'assembly_bounds_mm':[W,H,D],'shelves':5,'retaining_pockets':8,'fan_mounts':12,'screw_holes':48,'cable_passages':10,'top_air_gap_mm':gap,'rear_extension_mm':76.2,'front_extension_mm':revision['front_extension_mm'],'outer_wall_mm':wall,'psu_rear_open_mm':revision['psu_rear_open_mm'],'psu_model':'Delta ADP-240KB BA','psu_body_wdh_mm':[pw,pd,ph],'acer_oem_match':'UNCONFIRMED','support_free':'NOT claimed: wide rounded cable windows can require support in rear-down orientation','all_cad_edges_rounded':True,'metadata':metadata}
 (OUT/'validation.json').write_text(json.dumps(report,indent=2))
 
 ink='#0f172a';steel='#64748b';blue='#0369a1';gold='#fcd34d'
@@ -127,7 +139,7 @@ def save(fig,name,notes):
     os.replace(temporary,OUT/(name+'.png'))
 
 def frame(ax):
-    for x in [0,W-5]:ax.add_patch(Rectangle((x,0),5,H,facecolor=steel))
+    for x in [0,W-wall]:ax.add_patch(Rectangle((x,0),wall,H,facecolor=steel))
     for i in range(5):ax.add_patch(Rectangle((0,i*pitch),W,5,facecolor=steel))
 
 fig,ax=axes('Four Acer bays — front layout',(-25,W+25),(-10,H+25))
@@ -138,14 +150,15 @@ for i in range(4):
         ax.add_patch(Rectangle((x,y),w,h,facecolor=col,edgecolor=ink))
         ax.text(x+w/2,y+h/2,label,ha='center',va='center',fontsize=11)
         for gx in [x-fit-gt,x+w+fit]:ax.add_patch(Rectangle((gx,y),gt,gh,facecolor='#0f766e'))
+        ax.add_patch(Rectangle((x-fit,y),w+2*fit,gh,facecolor='#0f766e'))
     ax.text(dx+dw/2,y+dh+gap/2,'22 mm above DGX',ha='center',va='center',fontsize=10,color=blue)
 dim(ax,(0,H+12),(W,H+12),f'{W:g} mm wide',(0,6))
 ax.text(-13,H/2,'315 mm high',rotation=90,va='center',ha='center')
-save(fig,'front-layout',['Five 5 mm shelves; 5 mm outer walls; 22 mm device-to-wall and device-to-device spacing.',f'PSU envelope {pw:g} W × {pd:g} D × {ph:g} H mm: Delta ADP-240KB BA. Acer label match unconfirmed.','Green: 10 mm guides. Guide thickness and fitting clearance occupy part of each 22 mm side gap.'])
+save(fig,'front-layout',['Five 5 mm shelves; 25 mm outer walls; 2 mm outer gaps and 22 mm between devices.',f'PSU envelope {pw:g} W × {pd:g} D × {ph:g} H mm: Delta ADP-240KB BA. Acer label match unconfirmed.','Green: 10 mm retaining walls; outside guides merge into the 25 mm shell.'])
 
 fig,ax=axes('Shelf plan — retainers, rear extension and cable passages',(-20,W+35),(-25,D+35))
 ax.add_patch(Rectangle((0,0),W,D,facecolor='#e2e8f0',edgecolor=ink))
-for x in [0,W-5]:ax.add_patch(Rectangle((x,0),5,D,facecolor=steel))
+for x in [0,W-wall]:ax.add_patch(Rectangle((x,0),wall,D,facecolor=steel))
 for x,w,d,label,col in [(px,pw,pd,'ACER PSU',gold),(dx,dw,dd,'DGX','#cbd5e1')]:
     ax.add_patch(Rectangle((x,front),w,d,facecolor=col,alpha=.6,edgecolor=ink,linestyle='--'))
     ax.text(x+w/2,front+d/2,label,ha='center',fontsize=11)
@@ -153,10 +166,12 @@ for x,w,d,label,col in [(px,pw,pd,'ACER PSU',gold),(dx,dw,dd,'DGX','#cbd5e1')]:
     for gx in [x-fit-gt,x+w+fit]:
         ax.add_patch(Rectangle((gx,0),gt,back+gt,facecolor='#0f766e'))
         ax.add_patch(Rectangle((gx,back+gt),gt,gh,facecolor='#99f6e4'))
-    for ex in [x-fit,x+w-corner]:
-        ax.add_patch(Rectangle((ex,0),corner+fit,gt,facecolor='#0f766e'))
-        ax.add_patch(Rectangle((ex,back),corner+fit,gt,facecolor='#0f766e'))
-        ax.add_patch(Rectangle((ex,back+gt),corner+fit,gh,facecolor='#99f6e4'))
+    ax.add_patch(Rectangle((x-fit,0),w+2*fit,gt,facecolor='#0f766e'))
+    stop=(w+2*fit)/4 if label=='ACER PSU' else corner+fit
+    for ex in [x-fit,x+w+fit-stop]:
+        ax.add_patch(Rectangle((ex,back),stop,gt,facecolor='#0f766e'))
+        if label!='ACER PSU':
+            ax.add_patch(Rectangle((ex,back+gt),stop,gh,facecolor='#99f6e4'))
 for key,x in [('psu',px+pw/2),('dgx',dx+dw/2)]:
     w,start,end=win[key]
     ax.add_patch(FancyBboxPatch((x-w/2,start),w,end-start,boxstyle='round,pad=0,rounding_size=3',facecolor='white',edgecolor=blue,lw=2))
@@ -165,9 +180,9 @@ for cx in fc:ax.add_patch(Rectangle((cx-fm/2,D-5),fm,5,facecolor=ink))
 ax.axhline(D-25.4,color=blue,linestyle='--',lw=1)
 ax.text(7,D-25.4+3,'25.4 mm rear land',fontsize=9,color=blue)
 dim(ax,(W+12,front+dd),(W+12,D),'76.2 mm',(0,0))
-ax.text(W/2,-12,'FRONT — lift device over corner lips, then lower into guides',ha='center',fontsize=9)
+ax.text(W/2,-12,'FRONT — full retaining walls at the extended shelf edge',ha='center',fontsize=9)
 ax.text(W/2,D+17,'REAR — three fan mounts; remaining rear is open',ha='center',fontsize=10)
-save(fig,'shelf-plan',[f'Shelf depth {D:g} mm; exactly 76.2 mm (3 inches) beyond the DGX rear.',f'Rounded openings: {cw:g} × {cd:g} mm DGX; {cpw:g} × {win["psu"][2]-win["psu"][1]:g} mm PSU. Both start 12.7 mm behind their body.','Dark green: retainers; pale green: 45° rear support ramps. White windows: through-holes; R3 corners and R0.5 edge lips.'])
+save(fig,'shelf-plan',[f'Shelf depth {D:g} mm; front extended 25.4 mm; rear remains 76.2 mm beyond DGX.',f'Rounded openings: {cw:g} × {cd:g} mm DGX; {cpw:g} × {win["psu"][2]-win["psu"][1]:g} mm PSU. Both start 12.7 mm behind their body.','Dark green: retainers; pale green: 45° rear support ramps. White windows: through-holes; R3 corners and R0.5 edge lips.'])
 
 fig,ax=axes('Rear layout — twelve 40 mm fan mounts',(-20,W+20),(-5,H+20))
 frame(ax)
@@ -176,7 +191,7 @@ for i in range(4):
     for j,cx in enumerate(fc):
         cy=y+fy
         for x in [cx-fm/2,cx+fm/2-3]:
-            if x+3<=W-5:ax.add_patch(Rectangle((x,y),3,pitch-5,facecolor=steel))
+            if x+3<=W-wall:ax.add_patch(Rectangle((x,y),3,pitch-5,facecolor=steel))
         ax.add_patch(Rectangle((cx-fm/2,cy-fm/2),fm,fm,facecolor=steel,edgecolor=ink))
         ax.add_patch(Rectangle((cx-20,cy-20),40,40,fill=False,edgecolor='#fbbf24',linestyle='--'))
         ax.add_patch(Circle((cx,cy),fd/2,facecolor='white',edgecolor=ink))
@@ -184,18 +199,19 @@ for i in range(4):
             for yy in [-fp/2,fp/2]:ax.add_patch(Circle((cx+xx,cy+yy),sd/2,facecolor='white'))
         ax.text(cx,cy,'PSU' if j==0 else 'DGX',ha='center',va='center',fontsize=8)
 ax.text(W/2,H+10,'White areas around mounts stay open for rear cables',ha='center',fontsize=10,color=blue)
-save(fig,'rear-fans',['DGX fan bodies align to the far edges of the DGX + two 22 mm gaps; PSU fan stays centred.',f'40 × 40 mm fan outline; {fd:g} mm airflow opening; {fp:g} mm screw pitch; {sd:g} mm M3 holes.', 'Fans attach outside the rear. Hardware depth and cable bend radius add to the printed dimensions.'])
+save(fig,'rear-fans',['DGX fan centres moved inward to X=139/253 mm; PSU remains at X=63 mm.',f'40 × 40 mm fan outline; {fd:g} mm airflow opening; {fp:g} mm screw pitch; {sd:g} mm M3 holes.', 'Fans attach outside the rear. Hardware depth and cable bend radius add to the printed dimensions.'])
 
-fig,ax=axes('Retainer detail — 10 mm guides and 5 mm corner returns',(-15,190),(-20,185),(11,10))
+fig,ax=axes('Retainer detail — full front wall and rear cable access',(-15,190),(-20,215),(11,10))
 x=15;w=150;d=150
 ax.add_patch(Rectangle((x,front),w,d,facecolor='#e2e8f0',edgecolor=ink,linestyle='--'))
 for gx in [x-fit-gt,x+w+fit]:ax.add_patch(Rectangle((gx,0),gt,front+d+fit+gt,facecolor='#0f766e'))
+ax.add_patch(Rectangle((x-fit,0),w+2*fit,gt,facecolor='#0f766e'))
 for ex in [x-fit,x+w-corner]:
-    for z in [0,front+d+fit]:ax.add_patch(Rectangle((ex,z),corner+fit,gt,facecolor='#0f766e'))
+    ax.add_patch(Rectangle((ex,front+d+fit),corner+fit,gt,facecolor='#0f766e'))
 ax.text(x+w/2,75,'DEVICE FOOTPRINT\nLift 10 mm to clear the lips',ha='center',va='center',fontsize=13)
-ax.annotate('5 mm return onto each corner',xy=(x+3,1.5),xytext=(65,-12),arrowprops=dict(arrowstyle='->'),fontsize=10)
-ax.text(x+w/2,172,'Front and rear centres stay open for connectors',ha='center',fontsize=10)
-save(fig,'retainer-detail',['All guides and corner returns stand 10 mm above the shelf. Retainers are 3 mm thick.', '0.6 mm fitting clearance at each body edge; 45° ramps support rear edges during printing.', 'The PSU uses the same retainer layout, sized to its own 72 × 162 mm footprint.'])
+ax.annotate('Full-width front wall',xy=(x+3,1.5),xytext=(65,-12),arrowprops=dict(arrowstyle='->'),fontsize=10)
+ax.text(x+w/2,202,'DGX rear retains its corner stops',ha='center',fontsize=10)
+save(fig,'retainer-detail',['All retaining walls stand 10 mm above the shelf and are 3 mm thick.', '0.6 mm fitting clearance at each body edge; 45° ramps support rear edges during printing.', 'PSU rear wall has a centred 36.6 mm opening: 50% of the 73.2 mm clear pocket width.'])
 
 # Upright views use the CAD renderer to avoid painter-order artifacts on deep bays.
 upright=OUT/'upright-view.scad'

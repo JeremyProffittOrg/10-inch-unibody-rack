@@ -1,6 +1,6 @@
 # Four-bay Acer GN100 shelves
 
-A one-piece, open-front four-bay rack. Each bay holds an Acer GN100 on the right and its external power brick on the left. Five shelves and both outside walls are 5 mm thick. The back is open except for twelve fan mounts and their support posts. All CAD edges have 0.5 mm fillets; cable-window plan corners have 3 mm radii.
+A one-piece, open-front four-bay rack. Each bay holds an Acer GN100 on the right and its external power brick on the left. Five shelves are 5 mm thick; both outside walls are 25 mm thick. The shelves extend 25.4 mm farther forward, with full front retaining walls. The back is open except for twelve fan mounts and their support posts. All CAD edges have 0.5 mm fillets; cable-window plan corners have 3 mm radii.
 
 ## Hardware basis and remaining uncertainty
 
@@ -12,18 +12,21 @@ The candidate power brick is the Delta ADP-240KB BA, 72 W x 162 D x 23 H mm. Tho
 
 | Parameter | mm |
 |---|---:|
-| Overall width / height / printed depth | 298 / 315 / 229.8 |
+| Overall width / height / printed depth | 298 / 315 / 255.2 |
 | Rear shelf extension beyond DGX body | 76.2 (3 inches) |
-| DGX front offset from rack front | 3.6 |
-| Shelf and outer wall thickness | 5 |
+| Added front shelf length | 25.4 (1 inch) |
+| DGX front offset from rack front | 29 |
+| Shelf / outer wall thickness | 5 / 25 |
 | Shelf pitch / bay clear height | 77.5 / 72.5 |
 | Clearance over each DGX | 22 |
-| Nominal outer and inter-device side gaps | 22 |
+| Nominal outer / inter-device side gaps | 2 / 22 |
 | PSU body W / D / H | 72 / 162 / 23 |
 | DGX body W / D / H | 150 / 150 / 50.5 |
 | Device fitting clearance, per edge | 0.6 |
 | Retainer height / thickness | 10 / 3 |
-| Front/rear corner return onto body width | 5 |
+| Front retaining wall | full pocket width |
+| DGX rear corner return onto body width | 5 |
+| PSU rear opening / clear pocket width | 36.6 / 73.2 (50%) |
 | Rear guide ramp run | 10 |
 | Cable opening start behind each device | 12.7 (0.5 inch) |
 | Cable opening end before rack rear | 25.4 (1 inch) |
@@ -32,29 +35,29 @@ The candidate power brick is the Delta ADP-240KB BA, 72 W x 162 D x 23 H mm. Tho
 | Cable-window inside corner / all-edge radius | 3 / 0.5 |
 | Fan body outline / mount outline | 40 x 40 / 44 x 44 |
 | Fan airflow aperture / screw clearance | diameter 35 / diameter 3.4 |
-| Fan screw pitch / DGX fan-pair centre spacing | 32 / 154 |
+| Fan screw pitch / DGX fan-pair centre spacing | 32 / 114 |
 | Rear mount thickness / supporting post width | 5 / 3 |
 
-The 22 mm side gaps are measured from device bodies to walls or the other device body. The retaining rails occupy part of these gaps at the bottom 10 mm. This is deliberate: the rails are inside the established overall envelope. With the corrected PSU width, overall width is 5 + 22 + 72 + 22 + 150 + 22 + 5 = 298 mm.
+The device positions in X remain unchanged. The thicker shell leaves 2 mm between each outer device body and its wall; the middle gap remains 22 mm. The outside guides merge into the shell. Width is 25 + 2 + 72 + 22 + 150 + 2 + 25 = 298 mm. The devices and rear features move 25.4 mm rearward in the new front-origin coordinates. The new front retaining walls sit at the extended front edge; each pocket gains 25.4 mm of front-to-back space.
 
 ## Coordinates and component positions
 
-Use coordinates: X = width, Y = height, Z = depth toward rear. Origin is front-bottom-left. Printing rotates the rack so the rear sits on the bed: [X,Y,Z] maps to [Y,X,229.8-Z]. The print bounds are 315 x 298 x 229.8 mm, within the project's 325 x 320 x 325 mm single-nozzle H2D limits.
+Use coordinates: X = width, Y = height, Z = depth toward rear. Origin is front-bottom-left. Printing rotates the rack so the rear sits on the bed: [X,Y,Z] maps to [Y,X,255.2-Z]. The print bounds are 315 x 298 x 255.2 mm, within the project's 325 x 320 x 325 mm single-nozzle H2D limits.
 
 | Component | Position / bounding box |
 |---|---|
-| Five shelves | X 0..298, Y 77.5i..77.5i+5, Z 0..229.8; i=0..4 |
-| Left/right walls | X 0..5 / 293..298, Y 0..315, Z 0..229.8 |
-| PSU body, each bay | X 27..99, Y 5+77.5i..28+77.5i, Z 3.6..165.6 |
-| DGX body, each bay | X 121..271, Y 5+77.5i..55.5+77.5i, Z 3.6..153.6 |
+| Five shelves | X 0..298, Y 77.5i..77.5i+5, Z 0..255.2; i=0..4 |
+| Left/right walls | X 0..25 / 273..298, Y 0..315, Z 0..255.2 |
+| PSU body, each bay | X 27..99, Y 5+77.5i..28+77.5i, Z 29..191 |
+| DGX body, each bay | X 121..271, Y 5+77.5i..55.5+77.5i, Z 29..179 |
 | Retainers | 0.6 mm from body edges; 3 mm thick; Y shelf top..top+10 |
-| Rear fan centres | X 63,119,273; Y 41.25+77.5i; Z 224.8..229.8 |
-| Cable passage centres | X 63 and 196; Z 178.3..204.4 for PSU, 166.3..204.4 for DGX; through all five shelves |
+| Rear fan centres | X 63,139,253; Y 41.25+77.5i; Z 250.2..255.2 |
+| Cable passage centres | X 63 and 196; Z 203.7..229.8 for PSU, 191.7..229.8 for DGX; through all five shelves |
 
 ### Front section
 
 ~~~text
-    5 | 22 | PSU 72 | 22 | DGX 150 | 22 | 5   = 298
+   25 | 2 | PSU 72 | 22 | DGX 150 | 2 | 25   = 298
   +------------------------------------------------+
   |          air       |       22 mm air            |
   | PSU (23 high)      |       DGX (50.5 high)       |
@@ -68,13 +71,14 @@ Use coordinates: X = width, Y = height, Z = depth toward rear. Origin is front-b
 ~~~text
 REAR: +--open--[PSU FAN]--open--[DGX FAN][DGX FAN]--open--+
       |          rounded            rounded             |
-      |          cable hole         cable hole          | last 50.8
+      |          cable hole         cable hole          |
       |                                                 |
-      |   rear corner stops       rear corner stops     | 76.2 past DGX
+      |   50% rear opening        rear corner stops     | 76.2 past DGX
       |  +----------------+     +-------------------+   |
       |  |   PSU 72x162   |     |    DGX 150x150    |   |
       |  +----------------+     +-------------------+   |
-FRONT +---5 mm corner returns; middle edges stay open----+
+      |           25.4 mm added front space             |
+FRONT +---full PSU front wall-----full DGX front wall----+
 ~~~
 
 ### Side section of a bay
@@ -87,25 +91,25 @@ FRONT +---5 mm corner returns; middle edges stay open----+
   | |       DGX 50.5        |                            |
   | +-----------------------+  cables                    |
   +--- shelf --- retainer ---\--- rounded opening --------+
-     front       10 mm       45 degree guide ramp
+     full front wall (10 mm high); 25.4 mm extra front shelf
                   <---76.2 mm beyond DGX rear----------->
 ~~~
 
 ## Fan and cable details
 
-There are three fan mounts in every bay: two at the far edges of the DGX lane including both 22 mm side gaps and one aligned to the centre of the PSU. Each mount supports a standard 40 x 40 mm frame with 32 mm mounting-hole pitch. A 35 mm circular opening preserves the screw pads; a full 40 x 40 mm through-cut would remove those pads. There are 48 M3 clearance holes in total. Screws/nuts and fans are separate hardware. Fans sit outside the rear mounting face; choose screw length for the actual fan thickness plus the 5 mm mount and nut.
+There are three fan mounts in every bay: two moved inward to clear the thicker outer walls and one aligned to the centre of the PSU. Each mount supports a standard 40 x 40 mm frame with 32 mm mounting-hole pitch. A 35 mm circular opening preserves the screw pads; a full 40 x 40 mm through-cut would remove those pads. There are 48 M3 clearance holes in total. Screws/nuts and fans are separate hardware. Fans sit outside the rear mounting face; choose screw length for the actual fan thickness plus the 5 mm mount and nut.
 
-Outside the three rings and their posts, the rear is open. The outer wall directly supports the far-right fan, so no redundant thin post is used there. The DGX 40 mm fan bodies span X=99..139 and X=253..293, aligned with the outer edges of its two side gaps.
+Outside the three rings and their posts, the rear is open. The outer wall directly supports the far-right fan, so no redundant thin post is used there. The DGX 40 mm fan bodies span X=119..159 and X=233..273. Fan centres are X=139 and X=253; their 35 mm airflow bores clear the thick outside walls.
 
 Each shelf has two rounded rectangular cable windows. Widths are 80% of the respective body widths: 120 mm for DGX and 57.6 mm for PSU. Each begins 12.7 mm behind its device and ends 25.4 mm before the rack rear. Thus DGX depth is 38.1 mm and PSU depth is 26.1 mm. Corners are R3 in plan. Nominal dimensions are at the straight throat; R0.5 edge lips flare the openings by up to 0.5 mm at each surface.
 
-The device retainers have full side guides and short front/rear corner returns. The middle of both front and rear ends remains open for connectors and strain relief. Insert a device from the front above the 10 mm lips, then lower it into the pocket. The 22 mm space above a DGX permits the 10 mm lift. Do not force a device into an unverified pocket.
+The device retainers have full side guides and full-width front walls at the extended shelf edge. DGX rear corners retain their 5 mm stops. Each PSU rear wall leaves a centered 36.6 mm opening, exactly half the 73.2 mm clear pocket width. Its remaining end sections are vertical, without ramps into the cable windows. The side guides and DGX rear stops retain their 45-degree rear ramps. All retaining walls are 10 mm high and 3 mm thick. Insert devices from the front above the walls, then lower them into their pockets; the 22 mm clearance above each DGX permits this lift. Connector and physical PSU fit remain unverified.
 
 ## Print and validation
 
-The STL retains its rear-face-down orientation and 315 x 298 x 229.8 mm print bounds. The new wide rounded cable windows replace the tapered diamond openings. Their closing edges can require support in this orientation. Support-free printing is not claimed for this revision; review support placement and layer preview before printing.
+The STL retains its rear-face-down orientation and 315 x 298 x 255.2 mm print bounds. The new wide rounded cable windows replace the tapered diamond openings. Their closing edges can require support in this orientation. Support-free printing is not claimed for this revision; review support placement and layer preview before printing.
 
-The generator reuses the repository's CadQuery dependency for true three-dimensional fillets. Every geometric surface discontinuity is filleted at R0.5 mm, including outer shell, guides, fan mounts, screw bores and window lips. Native CAD validation requires one valid solid with zero remaining sharp edges. Mesh checks require a closed, consistently oriented, connected STL and unchanged printer bounds. Device-envelope, insertion-path and cable-path intersection checks protect fit. No physical fit, structural load or cooling test has been performed.
+The generator reuses the repository's CadQuery dependency for true three-dimensional fillets. Every geometric surface discontinuity is filleted at R0.5 mm, including outer shell, guides, fan mounts, screw bores and window lips. Native CAD validation requires one valid solid with zero remaining sharp edges. Mesh checks require a closed, consistently oriented, connected STL and the revised printer bounds. Device-envelope, insertion-path and cable-path intersection checks protect fit. No physical fit, structural load or cooling test has been performed.
 
 Build from the repository root:
 
@@ -132,3 +136,5 @@ The geometry source is acer_four_bay_geometry.py. The SCAD file is a mesh viewer
 - 2026-11-16: Added four-bay shelves, left PSU pockets, 76.2 mm rear extension, twelve fan mounts, ten cable passages and 10 mm corner retainers. Replaced the previous provisional brick envelope with published Delta ADP-240KB BA dimensions; exact Acer OEM identity remains unconfirmed.
 
 - 2026-11-16: Moved DGX fans outward across the full 194 mm lane; enlarged cable windows to 80% body width with the requested front/rear lands; rounded all edges at R0.5 and window plan corners at R3. The separate 2 mm-base fit-test coupon remains unchanged.
+
+- 2026-11-20: Extended the shelves 25.4 mm at the front, added full front retaining walls, left the centered 50% of each PSU rear wall open, and thickened outside walls to 25 mm while retaining 298 mm overall width. Moved DGX fans inward; preserved 5 mm fan-mount depth, device sizes, and bay height.

@@ -114,3 +114,39 @@ Geometry choices: 0.5 mm edge fillets throughout, 3 mm plan radii inside cable w
 - 2026-11-16: Windows generate.bat now selects the existing local uv executable when available, using the same pinned CadQuery command already verified in the full build. This avoids requiring python on PATH on this machine; Linux CI remains unchanged.
 
 - 2026-11-16: Release run 43927698784 completed SUCCESS. Downloaded published STL: 9,973,084 bytes, 199,460 triangles, bounds 315 x 298 x 229.800006 mm; binary length and bounds passed. Front/rear release PNGs also present. Geometry unchanged by the Windows entry-point follow-up.
+
+## Front-extension locked decisions (user-confirmed; do not revisit)
+- 2026-11-20: "front" — the extra inch extends the front.
+- 2026-11-20: "25 is wall thickness for the outside wall"
+- 2026-11-20: "deep at 298" — interpreted in the immediately preceding width choice as keeping the 298 mm width; announced before implementation.
+- 2026-11-20: "then open in bambu studios"
+- Original request: "extend the shelves out 1 inch, adding a front wall to the power supply and dgx walls. Also on the back of the power supply wall, we need to remove 50% of the wall in the middle on the back."
+
+## front-extension — extend front shelves and strengthen outside walls
+Outcome: 298 W x 315 H x 255.2 D mm, 25 mm outside walls, 25.4 mm additional shelf length at front, full 10 mm-high front retaining walls, PSU rear stops with centered 50% pocket-width opening.
+Non-goals: change device sizes, shelf thickness, bay height, fan hardware or material; claim support-free printing or physical fit.
+Files: C:/dev/10-inch-unibody-rack/{acer_four_bay_geometry.py,build_acer_four_bay.py,acer-four-bay-shelves.scad,acer-four-bay-shelves.md,README.md,plan.md}.
+Verified facts: current source uses 298 mm width, 315 height, 229.8 depth, 5 mm walls, 3 mm-thick/10 mm-high retainers. Existing build validates CAD rounding, manifold, body/insertion and cable clearances. git status preserves unrelated CLAUDE.md and untracked agents.md/concept logs.
+Implementation assumptions: device and rear-feature positions shift +25.4 mm in the new front-origin coordinates; new front walls lie at the extended leading edge. Device X positions stay 27/121 mm. Outer gaps become 2 mm, middle gap remains 22 mm. DGX fans move inward to X=139/253; PSU fan stays X=63. Fan mounts remain 5 mm deep. PSU rear stops are vertical to avoid intruding into the cable windows.
+
+### front-extension-model — build and verify changed geometry
+- [x] front-extension-source — update single CAD implementation, existing validation and diagrams, SCAD dimensions, docs.
+- [x] front-extension-proof — run C:/Users/Jeremy/.local/bin/uv.exe run --python 3.13 --with cadquery==2.8.0 --with matplotlib python -u build_acer_four_bay.py; exit 0 and validation.json passed=true, dimensions 315 x 298 x 255.2, walls 25, extension 25.4, front stops present and PSU center rear opening clear.
+### front-extension-delivery — open verified export and publish
+Depends on: front-extension-model
+- [x] front-extension-open — verify current build report and STL dimensions before spawning C:/Program Files/Bambu Studio/bambu-studio.exe with output/acer-four-bay/acer-four-bay-shelves.stl. Successful spawn; UI import not asserted.
+- [ ] front-extension-publish — git diff --check exit 0; focused commit/push to master; GitHub workflow terminal success.
+
+### front-extension-job-policy
+Build: hidden process with captured stdout/stderr/exit status, 10-minute timeout. At most two corrected retries; deterministic errors require a fix first. No blind retries. Track PID in this log.
+Bambu: one direct CLI spawn after successful validation. Keep existing sessions. No desktop control.
+CI: monitor all terminal states; bounded correction if failure is in this task's scope.
+Stop conditions: missing push credentials, irreversible unrelated action, confirmed scope contradiction. Preserve existing unrelated changes.
+
+### front-extension-execution-log
+- 2026-11-20: Read current source, build pipeline and existing checks. No dependencies added. Short commands use node child_process with windowsHide:true; native file reads launch no shell.
+
+- 2026-11-20: Front-extension build launched hidden, PID 9468. Log output/acer-four-bay/front-extension-build.log; 600-second ceiling.
+
+- 2026-11-20: Full build exited 0. CAD one solid/zero sharp edges; STL 190364 triangles, closed manifold/single component; dimensions 315 x 298 x 255.2 mm. Eight seated fits, eight insertion paths, two vertical cable paths, four PSU rear openings passed. Native solid checks verified full front stops and 25 mm shell thickness. Shelf diagram visually inspected.
+- 2026-11-20: Verified current validation fields and binary STL length before Bambu launch. CLI spawn succeeded, PID 28456. GUI import is unverified; no desktop control used.
