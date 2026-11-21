@@ -154,3 +154,33 @@ Stop conditions: missing push credentials, irreversible unrelated action, confir
 - 2026-11-20: git diff --cached --check passed. Focused commit c03ce5668cb3857928d6959ab07677cb73e79f71 pushed to master. Build and Release run 44728565927 monitored via public GitHub API.
 
 - 2026-11-20: Build and Release run 44728565927 completed SUCCESS. Downloaded published STL: 9,518,284 bytes, 190,364 triangles, 315 x 298 x 255.199994 mm bounds; binary length and requested dimensions passed. Both updated release PNGs present. Repository preview commit fast-forwarded; unrelated user edits preserved.
+
+## compact-bays locked decisions (user-confirmed; do not revisit)
+- 2026-11-21: "reduce the height by 2mm on each dgx, and 2mm from each shelf inclduding the bottom and top walls. add 3mm screw holes every 15mm on the left and right front, 15mm deep."
+
+## compact-bays — reduce bay and shelf heights and add front screw holes
+Outcome: reduce each bay clear height from 72.5 to 70.5 mm, all five shelf thicknesses from 5 to 3 mm, total height 315 to 297 mm. Keep width 298 and depth 255.2 mm. Add two vertical rows of blind, unthreaded 3 mm-diameter holes, 15 mm deep from Z=0, 15 mm centre pitch.
+Non-goals: alter physical DGX/PSU envelopes, 25 mm outer-wall thickness, front/rear shelf extensions, retaining walls, fan hardware or dependencies.
+Files: C:/dev/10-inch-unibody-rack/{acer_four_bay_geometry.py,build_acer_four_bay.py,acer-four-bay-shelves.scad,acer-four-bay-shelves.md,README.md,plan.md}.
+Verified facts: current files have 5 mm shelves, 315 mm height, four bays with 22 mm above nominal 50.5 mm DGX bodies. Existing GitHub workflow builds and publishes on master. Existing unrelated CLAUDE.md modification and untracked agents.md/concept logs remain untouched.
+Assumptions: "height on each dgx" means bay clearance, not shrinking actual device dimensions. Hole rows are centred in the 25 mm outside walls (X=12.5/285.5), with twenty holes per side at Y=6+15i, i=0..19. Standard R0.5 rounding remains, including hole mouths and blind floor edges; cylindrical throat is 3 mm, overall axial depth 15 mm. Reopen the verified revision in Bambu via CLI as in this ongoing design workflow.
+
+### compact-bays-model — implement and verify final solid
+- [x] compact-bays-source — update existing geometry, acceptance checks, diagrams, viewer and docs.
+- [x] compact-bays-proof — C:/Users/Jeremy/.local/bin/uv.exe run --python 3.13 --with cadquery==2.8.0 --with matplotlib python -u build_acer_four_bay.py exits 0; validation.json passed=true, bounds 297 x 298 x 255.2 mm; shelves 3 mm, DGX clearance 20 mm, forty 3 x 15 mm blind front holes at 15 mm pitch; existing manifold/fit/cable checks pass.
+### compact-bays-delivery — open and release checked model
+Depends on: compact-bays-model
+- [x] compact-bays-open — report and STL dimensions verified before spawning C:/Program Files/Bambu Studio/bambu-studio.exe with output/acer-four-bay/acer-four-bay-shelves.stl; capture launch PID. GUI import not asserted.
+- [ ] compact-bays-publish — git diff --check exits 0; focused commit and push; GitHub Build and Release reaches success; published STL bounds match.
+
+### compact-bays-job-policy
+Hidden local build captures log and exit status with a 600-second ceiling; at most two corrected retries, no identical deterministic retry. Track PID and result in this log. CI monitors success/failure/cancellation; at most two corrected pushes for in-scope failure. Bambu uses one direct CLI spawn after verification, preserving existing sessions. No scheduled automation or desktop control.
+Stop conditions: missing credentials, unauthorized irreversible action, or a material scope contradiction. No stop for routine build failures.
+
+### compact-bays-execution-log
+- 2026-11-21: Read current CAD, build checks, viewer, design doc, README and release workflow. git status confirms only previously unrelated changes. Native file I/O and hidden subprocesses used.
+
+- 2026-11-21: Compact-bays build launched hidden, PID 8096, log output/acer-four-bay/compact-bays-build.log; 600-second ceiling.
+
+- 2026-11-21: Full build command exited 0. One valid rounded CAD solid; 247924 triangles; closed connected manifold; 297 x 298 x 255.2 mm print bounds. All five 3 mm shelf sections, forty 3 mm/15 mm blind holes, eight seated fits, eight insertion paths, four PSU rear openings and two cable paths passed. Front diagram and assembly render visually inspected.
+- 2026-11-21: Current report and binary STL checked before Bambu CLI launch; PID 4820. Import completion not asserted; no desktop control used.

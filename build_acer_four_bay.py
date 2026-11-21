@@ -39,10 +39,18 @@ gh,gt,fit,corner,cz,cw,cpw,cd=metadata['features']
 fc,fy,fd,fp,sd,fm=metadata['fans']
 revision=metadata['revision']
 wall=revision['outer_wall_mm']
+shelf=metadata['shelf_thickness_mm']
+front_screws=metadata['front_screws']
+assert shelf==3
+assert front_screws['diameter_mm']==3 and front_screws['depth_mm']==15
+assert front_screws['pitch_mm']==15
+assert front_screws['x_mm']==[12.5,285.5]
+assert front_screws['y_mm']==[6+15*i for i in range(20)]
 assert abs(W-298)<1e-5 and abs(D-255.2)<1e-5
 assert wall==25 and revision['front_extension_mm']==25.4
 assert abs(front-29)<1e-5 and abs(revision['psu_rear_open_mm']-36.6)<1e-5
-assert abs(H-315)<1e-5 and abs(gap-22)<1e-5
+assert abs(H-297)<1e-5 and abs(gap-20)<1e-5
+assert abs(pitch-73.5)<1e-5 and abs(pitch-shelf-70.5)<1e-5
 assert abs(D-(front+dd+76.2))<1e-5
 assert H<=325 and W<=320 and D<=325
 win=metadata['windows']
@@ -102,13 +110,13 @@ def clear_box(low,high,label):
         active &= (np.min(proj,axis=1)<=radius+1e-8)&(np.max(proj,axis=1)>=-radius-1e-8)
     assert not np.any(active),label+' intersects printed geometry'
 for bay in range(4):
-    base=5+bay*pitch
+    base=shelf+bay*pitch
     for x,w,d,h,label in [(px,pw,pd,ph,'PSU'),(dx,dw,dd,dh,'DGX')]:
         clear_box([x+.05,base+.05,front+.05],[x+w-.05,base+h-.05,front+d-.05],label+' seated')
         lift=gh+fit
         clear_box([x+.05,base+lift+.05,-d],[x+w-.05,base+lift+h-.05,front+d-.05],label+' front insertion path')
 for bay in range(4):
-    base=5+bay*pitch
+    base=shelf+bay*pitch
     opening=revision['psu_rear_open_mm']
     back=front+pd+fit
     clear_box([px+pw/2-opening/2+.05,base+.55,back-.1],
@@ -116,9 +124,13 @@ for bay in range(4):
 clear_box([dx+dw/2-9,-1,cz-9],[dx+dw/2+9,H+1,cz+9],'DGX vertical cable path')
 pcz=(win['psu'][1]+win['psu'][2])/2
 clear_box([px+pw/2-7,-1,pcz-9],[px+pw/2+7,H+1,pcz+9],'PSU vertical cable path')
-print('PASS: eight nominal device fits, eight lifted insertion paths, two full-height cable paths',flush=True)
+for x in front_screws['x_mm']:
+    for y in front_screws['y_mm']:
+        clear_box([x-.9,y-.9,-.1],[x+.9,y+.9,front_screws['depth_mm']-.6],
+                  'Front screw bore')
+print('PASS: eight device fits, eight insertion paths, two cable paths and forty front screw bores',flush=True)
 
-report={'device_fit_and_insertion_paths':True,'vertical_cable_paths':True,'passed':True,'triangle_count':count,'closed_manifold':True,'connected_components':1,'positive_volume_mm3':volume,'print_bounds_mm':[H,W,D],'assembly_bounds_mm':[W,H,D],'shelves':5,'retaining_pockets':8,'fan_mounts':12,'screw_holes':48,'cable_passages':10,'top_air_gap_mm':gap,'rear_extension_mm':76.2,'front_extension_mm':revision['front_extension_mm'],'outer_wall_mm':wall,'psu_rear_open_mm':revision['psu_rear_open_mm'],'psu_model':'Delta ADP-240KB BA','psu_body_wdh_mm':[pw,pd,ph],'acer_oem_match':'UNCONFIRMED','support_free':'NOT claimed: wide rounded cable windows can require support in rear-down orientation','all_cad_edges_rounded':True,'metadata':metadata}
+report={'device_fit_and_insertion_paths':True,'vertical_cable_paths':True,'passed':True,'triangle_count':count,'closed_manifold':True,'connected_components':1,'positive_volume_mm3':volume,'print_bounds_mm':[H,W,D],'assembly_bounds_mm':[W,H,D],'shelves':5,'retaining_pockets':8,'fan_mounts':12,'screw_holes':88,'fan_screw_holes':48,'front_screw_holes':40,'shelf_thickness_mm':shelf,'front_screws':front_screws,'cable_passages':10,'top_air_gap_mm':gap,'rear_extension_mm':76.2,'front_extension_mm':revision['front_extension_mm'],'outer_wall_mm':wall,'psu_rear_open_mm':revision['psu_rear_open_mm'],'psu_model':'Delta ADP-240KB BA','psu_body_wdh_mm':[pw,pd,ph],'acer_oem_match':'UNCONFIRMED','support_free':'NOT claimed: wide rounded cable windows can require support in rear-down orientation','all_cad_edges_rounded':True,'metadata':metadata}
 (OUT/'validation.json').write_text(json.dumps(report,indent=2))
 
 ink='#0f172a';steel='#64748b';blue='#0369a1';gold='#fcd34d'
@@ -140,21 +152,24 @@ def save(fig,name,notes):
 
 def frame(ax):
     for x in [0,W-wall]:ax.add_patch(Rectangle((x,0),wall,H,facecolor=steel))
-    for i in range(5):ax.add_patch(Rectangle((0,i*pitch),W,5,facecolor=steel))
+    for i in range(5):ax.add_patch(Rectangle((0,i*pitch),W,shelf,facecolor=steel))
 
 fig,ax=axes('Four Acer bays — front layout',(-25,W+25),(-10,H+25))
 frame(ax)
+for x in front_screws['x_mm']:
+    for y in front_screws['y_mm']:
+        ax.add_patch(Circle((x,y),front_screws['diameter_mm']/2,facecolor='white',edgecolor=ink,lw=.6))
 for i in range(4):
-    y=5+i*pitch
+    y=shelf+i*pitch
     for x,w,h,label,col in [(px,pw,ph,'PSU '+str(i+1),gold),(dx,dw,dh,'DGX '+str(i+1),'#cbd5e1')]:
         ax.add_patch(Rectangle((x,y),w,h,facecolor=col,edgecolor=ink))
         ax.text(x+w/2,y+h/2,label,ha='center',va='center',fontsize=11)
         for gx in [x-fit-gt,x+w+fit]:ax.add_patch(Rectangle((gx,y),gt,gh,facecolor='#0f766e'))
         ax.add_patch(Rectangle((x-fit,y),w+2*fit,gh,facecolor='#0f766e'))
-    ax.text(dx+dw/2,y+dh+gap/2,'22 mm above DGX',ha='center',va='center',fontsize=10,color=blue)
+    ax.text(dx+dw/2,y+dh+gap/2,f'{gap:g} mm above DGX',ha='center',va='center',fontsize=10,color=blue)
 dim(ax,(0,H+12),(W,H+12),f'{W:g} mm wide',(0,6))
-ax.text(-13,H/2,'315 mm high',rotation=90,va='center',ha='center')
-save(fig,'front-layout',['Five 5 mm shelves; 25 mm outer walls; 2 mm outer gaps and 22 mm between devices.',f'PSU envelope {pw:g} W × {pd:g} D × {ph:g} H mm: Delta ADP-240KB BA. Acer label match unconfirmed.','Green: 10 mm retaining walls; outside guides merge into the 25 mm shell.'])
+ax.text(-13,H/2,f'{H:g} mm high',rotation=90,va='center',ha='center')
+save(fig,'front-layout',['Five 3 mm shelves; 25 mm outer walls; 2 mm outer gaps and 22 mm between devices.',f'PSU envelope {pw:g} W × {pd:g} D × {ph:g} H mm: Delta ADP-240KB BA. Acer label match unconfirmed.','Front: 20 blind holes per side, diameter 3 mm, depth 15 mm, pitch 15 mm.'])
 
 fig,ax=axes('Shelf plan — retainers, rear extension and cable passages',(-20,W+35),(-25,D+35))
 ax.add_patch(Rectangle((0,0),W,D,facecolor='#e2e8f0',edgecolor=ink))
@@ -187,11 +202,11 @@ save(fig,'shelf-plan',[f'Shelf depth {D:g} mm; front extended 25.4 mm; rear rema
 fig,ax=axes('Rear layout — twelve 40 mm fan mounts',(-20,W+20),(-5,H+20))
 frame(ax)
 for i in range(4):
-    y=5+i*pitch
+    y=shelf+i*pitch
     for j,cx in enumerate(fc):
         cy=y+fy
         for x in [cx-fm/2,cx+fm/2-3]:
-            if x+3<=W-wall:ax.add_patch(Rectangle((x,y),3,pitch-5,facecolor=steel))
+            if x+3<=W-wall:ax.add_patch(Rectangle((x,y),3,pitch-shelf,facecolor=steel))
         ax.add_patch(Rectangle((cx-fm/2,cy-fm/2),fm,fm,facecolor=steel,edgecolor=ink))
         ax.add_patch(Rectangle((cx-20,cy-20),40,40,fill=False,edgecolor='#fbbf24',linestyle='--'))
         ax.add_patch(Circle((cx,cy),fd/2,facecolor='white',edgecolor=ink))

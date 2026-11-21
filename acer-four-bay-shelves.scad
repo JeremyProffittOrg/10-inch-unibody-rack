@@ -2,14 +2,14 @@
  * Rounded four-bay Acer shelf viewer. Geometry is built by acer_four_bay_geometry.py.
  * Assembly: X width, Y height, Z rearward; origin front-bottom-left.
  * Print: [X,Y,Z] -> [Y,X,depth-Z], rear face on Z=0.
- * Component index: five 5 mm shelves at Y=77.5*i; 25 mm outer walls X=0/273;
- * eight 10 mm retaining pockets; twelve rear fan rings; ten rounded cable windows.
+ * Component index: five 3 mm shelves at Y=73.5*i; 25 mm outer walls X=0/273;
+ * eight 10 mm retaining pockets; twelve rear fan rings; ten rounded cable windows; forty 3 mm blind front holes at 15 mm pitch/depth.
  */
 outer_width_mm=298;
-rack_height_mm=315;
+rack_height_mm=297;
 outer_depth_mm=255.2;
-shelf_pitch_mm=77.5;
-shelf_thickness_mm=5;
+shelf_pitch_mm=73.5;
+shelf_thickness_mm=3;
 psu_x_mm=27;
 psu_width_mm=72;
 psu_depth_mm=162;
@@ -27,11 +27,11 @@ debug_axis_thickness_mm=1;
 bay_count=4;
 view="print";
 assert(rack_height_mm<=printer_x_mm && outer_width_mm<=printer_y_mm && outer_depth_mm<=printer_z_mm,"Printer bounds exceeded");
-/** Complete rounded native-CAD solid. Bounds [0,0,0]..[298,315,255.2].
+/** Complete rounded native-CAD solid. Bounds [0,0,0]..[298,297,255.2].
  * Run the generator first. This viewer has no alternative geometry path.
  */
 module rack() {import("output/acer-four-bay/acer-four-bay-shelves-assembly.stl");}
-/** Rear-down print placement; bounds [0,0,0]..[315,298,255.2]. */
+/** Rear-down print placement; bounds [0,0,0]..[297,298,255.2]. */
 module print_pose() {multmatrix([[0,1,0,0],[1,0,0,0],[0,0,-1,outer_depth_mm],[0,0,0,1]]) children();}
 /** Nominal body envelopes at each shelf surface, inside the retaining pockets. */
 module devices() {

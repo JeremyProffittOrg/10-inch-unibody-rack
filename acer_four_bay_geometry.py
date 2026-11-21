@@ -9,9 +9,12 @@ import cadquery as cq
 
 ROOT=Path(__file__).resolve().parent
 OUT=ROOT/'output'/'acer-four-bay'
-wall_mm=25.;shelf_mm=5.;height_mm=315.;bay_count=4
+wall_mm=25.;shelf_mm=3.;bay_count=4
 psu_width_mm=72.;psu_depth_mm=162.;psu_height_mm=23.
 dgx_width_mm=150.;dgx_depth_mm=150.;dgx_height_mm=50.5
+dgx_air_gap_mm=20.
+front_hole_diameter_mm=3.;front_hole_pitch_mm=15.;front_hole_depth_mm=15.
+front_hole_end_margin_mm=3.;cut_overlap_mm=1.
 side_gap_mm=22.;outer_gap_mm=2.;rear_extension_mm=76.2;front_extension_mm=25.4
 psu_rear_open_ratio=.5
 fit_mm=.6;guide_thickness_mm=3.;guide_height_mm=10.;corner_return_mm=5.
@@ -23,8 +26,13 @@ dgx_x_mm=psu_x_mm+psu_width_mm+side_gap_mm
 width_mm=dgx_x_mm+dgx_width_mm+outer_gap_mm+wall_mm
 front_mm=front_extension_mm+guide_thickness_mm+fit_mm
 depth_mm=front_mm+dgx_depth_mm+rear_extension_mm
-pitch_mm=(height_mm-shelf_mm)/bay_count
-bay_height_mm=pitch_mm-shelf_mm
+bay_height_mm=dgx_height_mm+dgx_air_gap_mm
+pitch_mm=bay_height_mm+shelf_mm
+height_mm=bay_count*pitch_mm+shelf_mm
+front_hole_count=int((height_mm-2*front_hole_end_margin_mm)//front_hole_pitch_mm)+1
+front_hole_start_mm=(height_mm-(front_hole_count-1)*front_hole_pitch_mm)/2
+front_hole_x_mm=[wall_mm/2,width_mm-wall_mm/2]
+front_hole_y_mm=[front_hole_start_mm+i*front_hole_pitch_mm for i in range(front_hole_count)]
 fan_centres_mm=[psu_x_mm+psu_width_mm/2,
     dgx_x_mm-outer_gap_mm+fan_frame_mm/2,
     dgx_x_mm+dgx_width_mm+outer_gap_mm-fan_frame_mm/2]
@@ -71,6 +79,18 @@ def cable_window(cx,body_width,body_depth,y):
         .edges('|Y').fillet(cable_corner_radius_mm).val().translate((cx-w/2,y-1,start)))
 
 
+def front_screw_holes():
+    """Blind front holes along +Z, centred in each outside wall.
+
+    Forty cutters: X centres 12.5/285.5, Y centres 6..291 at 15 mm pitch.
+    Bounds per cutter: centre +/- diameter/2 in X/Y; Z -overlap..15.
+    The small negative-Z overrun opens the front; the floor remains at Z=15.
+    """
+    return [cq.Solid.makeCylinder(front_hole_diameter_mm/2,front_hole_depth_mm+cut_overlap_mm,
+            cq.Vector(x,y,-cut_overlap_mm),cq.Vector(0,0,1))
+            for x in front_hole_x_mm for y in front_hole_y_mm]
+
+
 def sharp_edges(shape):
     """Find true surface discontinuities; tangent fillet boundaries are excluded."""
     adjacent={}
@@ -91,6 +111,9 @@ def metadata():
     psu_start=front_mm+psu_depth_mm+cable_device_gap_mm
     end=depth_mm-cable_rear_land_mm
     return {
+        'shelf_thickness_mm':shelf_mm,
+        'front_screws':{'diameter_mm':front_hole_diameter_mm,'pitch_mm':front_hole_pitch_mm,
+                        'depth_mm':front_hole_depth_mm,'x_mm':front_hole_x_mm,'y_mm':front_hole_y_mm},
         'revision':{'front_extension_mm':front_extension_mm,'outer_wall_mm':wall_mm,
                     'outer_gap_mm':outer_gap_mm,'psu_rear_open_ratio':psu_rear_open_ratio,
                     'psu_rear_open_mm':(psu_width_mm+2*fit_mm)*psu_rear_open_ratio},
@@ -125,7 +148,7 @@ def build():
     assert side_gap_mm>2*(fit_mm+guide_thickness_mm)
     assert edge_radius_mm<fit_mm and 2*edge_radius_mm<guide_thickness_mm
     parts=[box(0,0,0,wall_mm,height_mm,depth_mm),box(width_mm-wall_mm,0,0,wall_mm,height_mm,depth_mm)]
-    cuts=[]
+    cuts=front_screw_holes()
     for i in range(bay_count+1):
         y=i*pitch_mm;parts.append(box(0,y,0,width_mm,shelf_mm,depth_mm))
         cuts.extend([cable_window(dgx_x_mm+dgx_width_mm/2,dgx_width_mm,dgx_depth_mm,y),
@@ -165,6 +188,22 @@ def build():
             assert shape.isInside(cq.Vector(x,y+guide_height_mm/2,back+guide_thickness_mm/2)),'Missing PSU rear stop'
         for x,inside in [(wall_mm-.5,True),(wall_mm+.5,False),(width_mm-wall_mm+.5,True),(width_mm-wall_mm-.5,False)]:
             assert shape.isInside(cq.Vector(x,y+bay_height_mm/2,front_mm+dgx_depth_mm/2))==inside,'Outer wall thickness mismatch'
+    # Check the requested 3 mm shelf thickness and blind-hole walls/floors.
+    probe_x=dgx_x_mm+dgx_width_mm/2
+    probe_z=front_mm+dgx_depth_mm/2
+    for i in range(bay_count+1):
+        bottom=i*pitch_mm
+        assert shape.isInside(cq.Vector(probe_x,bottom+shelf_mm/2,probe_z))
+        for y in [bottom-.1,bottom+shelf_mm+.1]:
+            assert not shape.isInside(cq.Vector(probe_x,y,probe_z)),'Shelf thickness mismatch'
+    for x in front_hole_x_mm:
+        for y in front_hole_y_mm:
+            for z in [.1,front_hole_depth_mm/2,front_hole_depth_mm-.1]:
+                assert not shape.isInside(cq.Vector(x,y,z)),'Front hole blocked'
+            assert shape.isInside(cq.Vector(x,y,front_hole_depth_mm+.1)),'Front hole is not blind at requested depth'
+            for sign in [-1,1]:
+                assert not shape.isInside(cq.Vector(x+sign*(front_hole_diameter_mm/2-.1),y,front_hole_depth_mm/2))
+                assert shape.isInside(cq.Vector(x+sign*(front_hole_diameter_mm/2+.1),y,front_hole_depth_mm/2)),'Front hole diameter mismatch'
     print_shape=shape.rotate((0,0,0),(1,1,0),180).translate((0,0,depth_mm))
     cq.exporters.export(shape,str(OUT/'acer-four-bay-shelves.step'))
     removed={}
