@@ -205,7 +205,7 @@ Assumptions: top/bottom clearance is measured from the nearest edge of the round
 ### divider-clearance-delivery — open and publish the verified rack
 Depends on: divider-clearance-model
 - [x] divider-clearance-open — verify current report and STL before direct Bambu Studio CLI launch; preserve existing sessions; GUI import not asserted.
-- [ ] divider-clearance-publish — git diff --check exits 0; focused commit/push master; existing GitHub workflow terminal success; published STL verified.
+- [x] divider-clearance-publish — git diff --check exits 0; focused commit/push master; existing GitHub workflow terminal success; published STL verified.
 
 ### divider-clearance-job-policy
 Local build: hidden process, captured log/exit, 600-second limit; at most two corrected retries. CI: monitor success/failure/cancellation, at most two corrected pushes for in-scope deterministic failures. No blind retries, scheduling or desktop control. Bambu: one CLI spawn after validation.
@@ -218,3 +218,7 @@ Stop conditions: missing credentials, unauthorized irreversible action, or a mat
 
 - 2026-11-21: Full build command exited 0. One valid rounded solid; 239548 triangles; closed connected manifold; dimensions unchanged at 297 x 298 x 255.2 mm. All four divider interior-volume checks passed. Rounded-mouth top/bottom clearance 19 mm; 36 front bores, eight device fits, eight insertion paths, four PSU rear openings and two cable paths passed. Shelf diagram and assembly render visually inspected.
 - 2026-11-21: Checked current report and binary STL before Bambu launch; PID 51268. GUI import not asserted; no desktop control.
+
+- 2026-11-21: git diff --cached --check passed. Focused commit 58cb74ebe1e01ebb034842ce1268629e6ec7556e pushed to master. Build and Release run 44898587185 monitored via public GitHub API.
+
+- 2026-11-21: Build and Release run 44898587185 completed SUCCESS. Published STL verified: 11,977,484 bytes, 239,548 triangles matching the revised local mesh count, bounds 297 x 298 x 255.199994 mm. Updated front/rear PNGs confirmed. Preview commit fast-forwarded. Physical fit/load and Bambu GUI import remain unverified.
