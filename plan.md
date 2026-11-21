@@ -171,7 +171,7 @@ Assumptions: "height on each dgx" means bay clearance, not shrinking actual devi
 ### compact-bays-delivery — open and release checked model
 Depends on: compact-bays-model
 - [x] compact-bays-open — report and STL dimensions verified before spawning C:/Program Files/Bambu Studio/bambu-studio.exe with output/acer-four-bay/acer-four-bay-shelves.stl; capture launch PID. GUI import not asserted.
-- [ ] compact-bays-publish — git diff --check exits 0; focused commit and push; GitHub Build and Release reaches success; published STL bounds match.
+- [x] compact-bays-publish — git diff --check exits 0; focused commit and push; GitHub Build and Release reaches success; published STL bounds match.
 
 ### compact-bays-job-policy
 Hidden local build captures log and exit status with a 600-second ceiling; at most two corrected retries, no identical deterministic retry. Track PID and result in this log. CI monitors success/failure/cancellation; at most two corrected pushes for in-scope failure. Bambu uses one direct CLI spawn after verification, preserving existing sessions. No scheduled automation or desktop control.
@@ -184,3 +184,7 @@ Stop conditions: missing credentials, unauthorized irreversible action, or a mat
 
 - 2026-11-21: Full build command exited 0. One valid rounded CAD solid; 247924 triangles; closed connected manifold; 297 x 298 x 255.2 mm print bounds. All five 3 mm shelf sections, forty 3 mm/15 mm blind holes, eight seated fits, eight insertion paths, four PSU rear openings and two cable paths passed. Front diagram and assembly render visually inspected.
 - 2026-11-21: Current report and binary STL checked before Bambu CLI launch; PID 4820. Import completion not asserted; no desktop control used.
+
+- 2026-11-21: git diff --cached --check passed. Focused commit 27d8e0c1544fbdd81a952ea32dd7922b02c0d8ff pushed to master. Build and Release run 44894389678 monitored through public GitHub API.
+
+- 2026-11-21: Build and Release run 44894389678 completed SUCCESS. Published STL downloaded and checked: 12,396,284 bytes, 247,924 triangles, bounds 297 x 298 x 255.199994 mm. Updated front/rear PNG assets confirmed. Preview commit fast-forwarded. Unrelated user changes remain untouched. Physical load/screw fit and Bambu GUI import are not verified.
