@@ -27,8 +27,9 @@ Four DGX bays with left power-brick pockets, five 3 mm shelves, 20 mm above each
 DGX, twelve rear 40 mm fan mounts, and rounded cable windows through every shelf.
 Shelves extend 25.4 mm at the front with full front retaining walls; PSU rear
 retaining walls have a centered 50% opening. Outside walls are 25 mm thick within
-the unchanged 298 mm width. Each front side has twenty 3 mm blind screw holes,
-15 mm deep at 15 mm spacing. DGX fans move inward to clear these walls. All edges
+the unchanged 298 mm width. Each front side has eighteen 3 mm blind screw holes,
+15 mm deep at 15 mm spacing, with at least 15 mm clear of the top and bottom.
+A continuous 10 mm-high divider joins the DGX and PSU retaining walls on each shelf. DGX fans move inward to clear these walls. All edges
 have 0.5 mm fillets; windows have 3 mm inside corner radii. Wide window spans
 may require print supports.
 Printed rack: 298 W x 297 H x 255.2 D mm; rear-face-down STL fits the H2D.

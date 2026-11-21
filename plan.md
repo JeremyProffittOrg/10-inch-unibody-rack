@@ -188,3 +188,33 @@ Stop conditions: missing credentials, unauthorized irreversible action, or a mat
 - 2026-11-21: git diff --cached --check passed. Focused commit 27d8e0c1544fbdd81a952ea32dd7922b02c0d8ff pushed to master. Build and Release run 44894389678 monitored through public GitHub API.
 
 - 2026-11-21: Build and Release run 44894389678 completed SUCCESS. Published STL downloaded and checked: 12,396,284 bytes, 247,924 triangles, bounds 297 x 298 x 255.199994 mm. Updated front/rear PNG assets confirmed. Preview commit fast-forwarded. Unrelated user changes remain untouched. Physical load/screw fit and Bambu GUI import are not verified.
+
+## divider-clearance locked decisions (user-confirmed; do not revisit)
+- 2026-11-21: "good, but the 3mm holes can not be within 15mm of the top and bottom, and on the shelves, close the walls between the dgx and power supply to it's one contionus wall between"
+
+## divider-clearance — protect end margins and close the centre divider
+Outcome: retain 15 mm screw pitch/depth and 3 mm throats, but leave at least 15 mm from any rounded hole opening to the outside top/bottom. Centre eighteen holes per side at Y=21..276, giving 19 mm minimum mouth-edge clearance. Replace the two inner rails with a single solid 20.8 mm-wide, 10 mm-high divider at X=99.6..120.4 on each of four device shelves; full-height divider runs Z=0..194.6 with a 10 mm rear ramp.
+Non-goals: change device positions, fit clearances, bay height, shelf thickness, outside dimensions, PSU rear opening, fan layout or cable windows. No full-bay-height partition and no extra top-surface divider.
+Files: C:/dev/10-inch-unibody-rack/{acer_four_bay_geometry.py,build_acer_four_bay.py,acer-four-bay-shelves.scad,acer-four-bay-shelves.md,README.md,plan.md}.
+Verified facts: current CAD has two 3 mm inner rails separated by 14.8 mm, forty front holes with centres Y=6..291, and 297 mm total height. Existing build checks device/insertion/cable paths, hole bores, shelf thickness, CAD rounding and STL closure.
+Assumptions: top/bottom clearance is measured from the nearest edge of the rounded hole mouth, not just its centre. The continuous divider retains the existing 10 mm retainer height and fills the space between the inner rails over their full depth.
+
+### divider-clearance-model — build and validate both changes
+- [x] divider-clearance-source — replace separated inner rails, update hole margin rule, existing checks and diagrams, and docs.
+- [x] divider-clearance-proof — C:/Users/Jeremy/.local/bin/uv.exe run --python 3.13 --with cadquery==2.8.0 --with matplotlib python -u build_acer_four_bay.py exits 0; validation.json passed=true, 36 front holes, minimum rounded-mouth end clearance >=15 mm, four solid continuous dividers; existing fit and mesh checks pass.
+### divider-clearance-delivery — open and publish the verified rack
+Depends on: divider-clearance-model
+- [x] divider-clearance-open — verify current report and STL before direct Bambu Studio CLI launch; preserve existing sessions; GUI import not asserted.
+- [ ] divider-clearance-publish — git diff --check exits 0; focused commit/push master; existing GitHub workflow terminal success; published STL verified.
+
+### divider-clearance-job-policy
+Local build: hidden process, captured log/exit, 600-second limit; at most two corrected retries. CI: monitor success/failure/cancellation, at most two corrected pushes for in-scope deterministic failures. No blind retries, scheduling or desktop control. Bambu: one CLI spawn after validation.
+Stop conditions: missing credentials, unauthorized irreversible action, or a material scope contradiction.
+
+### divider-clearance-execution-log
+- 2026-11-21: Read current CAD, checker, viewer, design doc and README. Unrelated CLAUDE.md and untracked agents.md/concept logs preserved. Native filesystem and hidden subprocesses used.
+
+- 2026-11-21: Divider-clearance build launched hidden, PID 16260, log output/acer-four-bay/divider-clearance-build.log; 600-second ceiling.
+
+- 2026-11-21: Full build command exited 0. One valid rounded solid; 239548 triangles; closed connected manifold; dimensions unchanged at 297 x 298 x 255.2 mm. All four divider interior-volume checks passed. Rounded-mouth top/bottom clearance 19 mm; 36 front bores, eight device fits, eight insertion paths, four PSU rear openings and two cable paths passed. Shelf diagram and assembly render visually inspected.
+- 2026-11-21: Checked current report and binary STL before Bambu launch; PID 51268. GUI import not asserted; no desktop control.

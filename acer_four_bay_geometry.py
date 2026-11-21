@@ -14,7 +14,7 @@ psu_width_mm=72.;psu_depth_mm=162.;psu_height_mm=23.
 dgx_width_mm=150.;dgx_depth_mm=150.;dgx_height_mm=50.5
 dgx_air_gap_mm=20.
 front_hole_diameter_mm=3.;front_hole_pitch_mm=15.;front_hole_depth_mm=15.
-front_hole_end_margin_mm=3.;cut_overlap_mm=1.
+front_hole_edge_clearance_mm=15.;cut_overlap_mm=1.
 side_gap_mm=22.;outer_gap_mm=2.;rear_extension_mm=76.2;front_extension_mm=25.4
 psu_rear_open_ratio=.5
 fit_mm=.6;guide_thickness_mm=3.;guide_height_mm=10.;corner_return_mm=5.
@@ -29,8 +29,12 @@ depth_mm=front_mm+dgx_depth_mm+rear_extension_mm
 bay_height_mm=dgx_height_mm+dgx_air_gap_mm
 pitch_mm=bay_height_mm+shelf_mm
 height_mm=bay_count*pitch_mm+shelf_mm
+front_hole_end_margin_mm=front_hole_edge_clearance_mm+front_hole_diameter_mm/2+edge_radius_mm
 front_hole_count=int((height_mm-2*front_hole_end_margin_mm)//front_hole_pitch_mm)+1
 front_hole_start_mm=(height_mm-(front_hole_count-1)*front_hole_pitch_mm)/2
+divider_x_mm=psu_x_mm+psu_width_mm+fit_mm
+divider_width_mm=dgx_x_mm-fit_mm-divider_x_mm
+divider_depth_mm=front_mm+max(psu_depth_mm,dgx_depth_mm)+fit_mm+guide_thickness_mm
 front_hole_x_mm=[wall_mm/2,width_mm-wall_mm/2]
 front_hole_y_mm=[front_hole_start_mm+i*front_hole_pitch_mm for i in range(front_hole_count)]
 fan_centres_mm=[psu_x_mm+psu_width_mm/2,
@@ -49,16 +53,16 @@ def guide(x,width,z0,z1,y):
         .close().extrude(width).val())
 
 
-def retainer(x,w,d,y,rear_open_ratio=None):
-    """Side guides and full front stop; PSU rear stops leave the middle half open.
+def retainer(x,w,d,y,outer_left=False,rear_open_ratio=None):
+    """Outside guide and full front stop; the shared divider supplies the inner side.
 
     Bounds: X x-fit-guide_thickness .. x+w+fit+guide_thickness,
     Y y .. y+guide_height, Z 0 .. front+d+fit+guide_thickness+guide_height.
     Side rails merge into the thick outer shell; all stops join the shelf top.
     """
     back=front_mm+d+fit_mm;parts=[]
-    for rail_x in [x-fit_mm-guide_thickness_mm,x+w+fit_mm]:
-        parts.append(guide(rail_x,guide_thickness_mm,0,back+guide_thickness_mm,y))
+    rail_x=x-fit_mm-guide_thickness_mm if outer_left else x+w+fit_mm
+    parts.append(guide(rail_x,guide_thickness_mm,0,back+guide_thickness_mm,y))
     parts.append(box(x-fit_mm,y,0,w+2*fit_mm,guide_height_mm,guide_thickness_mm))
     if rear_open_ratio is None:
         for end_x in [x-fit_mm,x+w-corner_return_mm]:
@@ -68,6 +72,16 @@ def retainer(x,w,d,y,rear_open_ratio=None):
         for end_x in [x-fit_mm,x+w+fit_mm-stop_width]:
             parts.append(box(end_x,y,back,stop_width,guide_height_mm,guide_thickness_mm))
     return parts
+
+
+def shelf_divider(y):
+    """Continuous shared wall between PSU and DGX; y is the shelf top.
+
+    Bounds: X 99.6..120.4; Y y..y+10; Z 0..204.6, with full height to 194.6.
+    Replaces both inner guides and fills their former gap. The rear ramp joins
+    the shelf without blocking either device pocket or the cable windows.
+    """
+    return guide(divider_x_mm,divider_width_mm,0,divider_depth_mm,y)
 
 
 def cable_window(cx,body_width,body_depth,y):
@@ -82,7 +96,7 @@ def cable_window(cx,body_width,body_depth,y):
 def front_screw_holes():
     """Blind front holes along +Z, centred in each outside wall.
 
-    Forty cutters: X centres 12.5/285.5, Y centres 6..291 at 15 mm pitch.
+    Thirty-six cutters: X centres 12.5/285.5, Y centres 21..276 at 15 mm pitch.
     Bounds per cutter: centre +/- diameter/2 in X/Y; Z -overlap..15.
     The small negative-Z overrun opens the front; the floor remains at Z=15.
     """
@@ -112,8 +126,9 @@ def metadata():
     end=depth_mm-cable_rear_land_mm
     return {
         'shelf_thickness_mm':shelf_mm,
+        'divider':{'x_mm':divider_x_mm,'width_mm':divider_width_mm,'height_mm':guide_height_mm,'depth_mm':divider_depth_mm},
         'front_screws':{'diameter_mm':front_hole_diameter_mm,'pitch_mm':front_hole_pitch_mm,
-                        'depth_mm':front_hole_depth_mm,'x_mm':front_hole_x_mm,'y_mm':front_hole_y_mm},
+                        'depth_mm':front_hole_depth_mm,'edge_clearance_mm':front_hole_edge_clearance_mm,'x_mm':front_hole_x_mm,'y_mm':front_hole_y_mm},
         'revision':{'front_extension_mm':front_extension_mm,'outer_wall_mm':wall_mm,
                     'outer_gap_mm':outer_gap_mm,'psu_rear_open_ratio':psu_rear_open_ratio,
                     'psu_rear_open_mm':(psu_width_mm+2*fit_mm)*psu_rear_open_ratio},
@@ -156,7 +171,8 @@ def build():
     for i in range(bay_count):
         y=shelf_mm+i*pitch_mm
         parts.extend(retainer(dgx_x_mm,dgx_width_mm,dgx_depth_mm,y))
-        parts.extend(retainer(psu_x_mm,psu_width_mm,psu_depth_mm,y,psu_rear_open_ratio))
+        parts.extend(retainer(psu_x_mm,psu_width_mm,psu_depth_mm,y,outer_left=True,rear_open_ratio=psu_rear_open_ratio))
+        parts.append(shelf_divider(y))
         for cx in fan_centres_mm:
             cy=y+bay_height_mm/2
             parts.append(box(cx-fan_mount_mm/2,cy-fan_mount_mm/2,depth_mm-fan_depth_mm,fan_mount_mm,fan_mount_mm,fan_depth_mm))
@@ -176,9 +192,14 @@ def build():
     shape=shape.fillet(edge_radius_mm,edges).clean()
     assert shape.isValid() and len(shape.Solids())==1
     assert not sharp_edges(shape),'Sharp CAD edges remain'
+    mouth_radius=front_hole_diameter_mm/2+edge_radius_mm
+    assert front_hole_y_mm[0]-mouth_radius>=front_hole_edge_clearance_mm
+    assert height_mm-front_hole_y_mm[-1]-mouth_radius>=front_hole_edge_clearance_mm
     # Acceptance checks on the final rounded solid, before exporting or opening it.
     for i in range(bay_count):
         y=shelf_mm+i*pitch_mm
+        divider_core=box(divider_x_mm+1,y+1,1,divider_width_mm-2,guide_height_mm-2,divider_depth_mm-2)
+        assert divider_core.cut(shape).Volume()<1e-6,'Gap in shared divider'
         for x,w in [(psu_x_mm,psu_width_mm),(dgx_x_mm,dgx_width_mm)]:
             for fraction in [.1,.5,.9]:
                 assert shape.isInside(cq.Vector(x+w*fraction,y+guide_height_mm/2,guide_thickness_mm/2)),'Missing full front wall'

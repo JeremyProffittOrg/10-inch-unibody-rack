@@ -3,7 +3,7 @@
  * Assembly: X width, Y height, Z rearward; origin front-bottom-left.
  * Print: [X,Y,Z] -> [Y,X,depth-Z], rear face on Z=0.
  * Component index: five 3 mm shelves at Y=73.5*i; 25 mm outer walls X=0/273;
- * eight 10 mm retaining pockets; twelve rear fan rings; ten rounded cable windows; forty 3 mm blind front holes at 15 mm pitch/depth.
+ * four continuous 10 mm-high shared dividers; eight retaining pockets; twelve rear fan rings; ten rounded cable windows; thirty-six 3 mm blind front holes at 15 mm pitch/depth.
  */
 outer_width_mm=298;
 rack_height_mm=297;
