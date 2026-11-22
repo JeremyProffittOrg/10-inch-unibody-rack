@@ -17,6 +17,23 @@ A parametric, unibody 10-inch server rack designed to 3D print in a single piece
 
 ## Designs
 
+### Curved fan-first DGX enclosure (v14)
+
+| Front View | Rear View |
+|---|---|
+| ![Front](https://github.com/JeremyProffittOrg/10-inch-unibody-rack/releases/latest/download/acer-dgx-enclosure-v14_front.png) | ![Rear](https://github.com/JeremyProffittOrg/10-inch-unibody-rack/releases/latest/download/acer-dgx-enclosure-v14_rear.png) |
+
+One DGX above its power supply, with curved walls, a permanent shelf and
+seven-fan plate. Two continuous troughs carry air below the DGX; the upper
+fan row supplies air above it. The full-outline LCD cap screws on through
+3 mm bores and leaves 25.4 mm between LCD hardware and fans. The main body
+prints fan-plate-first; the cap prints separately.
+
+**Documentation**: [acer-dgx-enclosure-v14.md](acer-dgx-enclosure-v14.md)
+
+**Download STL**: [body](https://github.com/JeremyProffittOrg/10-inch-unibody-rack/releases/latest/download/acer-dgx-enclosure-v14-shell.stl), [LCD cap](https://github.com/JeremyProffittOrg/10-inch-unibody-rack/releases/latest/download/acer-dgx-enclosure-v14-lcd.stl)
+
+
 ### Four-bay Acer GN100 shelves
 
 | Front View | Rear View |

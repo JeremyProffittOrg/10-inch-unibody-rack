@@ -11,6 +11,7 @@ mkdir -p "${OUTPUT_DIR}/images"
 
 echo "Building rounded Acer shelf geometry..."
 python3 acer_four_bay_geometry.py || exit 1
+python3 build_acer_v14.py || exit 1
 
 # Process all SCAD files
 for scad_file in *.scad; do
@@ -28,7 +29,10 @@ for scad_file in *.scad; do
     echo ""
     echo "=== Processing ${name} ==="
 
-    if [[ "${name}" == waveshare-7inch-lcd-case-* ]]; then
+    if [[ "${name}" == acer-dgx-enclosure-v14 ]]; then
+        cp output/acer-v14/shell.stl "${OUTPUT_DIR}/stl/${name}-shell.stl"
+        cp output/acer-v14/lcd.stl "${OUTPUT_DIR}/stl/${name}-lcd.stl"
+    elif [[ "${name}" == waveshare-7inch-lcd-case-* ]]; then
         echo "  Building base STL..."
         ${OPENSCAD} --export-format binstl -D 'part="base"' \
             -o "${OUTPUT_DIR}/stl/${name}-base.stl" "${scad_file}"

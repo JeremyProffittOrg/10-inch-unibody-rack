@@ -222,3 +222,44 @@ Stop conditions: missing credentials, unauthorized irreversible action, or a mat
 - 2026-11-21: git diff --cached --check passed. Focused commit 58cb74ebe1e01ebb034842ce1268629e6ec7556e pushed to master. Build and Release run 44898587185 monitored via public GitHub API.
 
 - 2026-11-21: Build and Release run 44898587185 completed SUCCESS. Published STL verified: 11,977,484 bytes, 239,548 triangles matching the revised local mesh count, bounds 297 x 298 x 255.199994 mm. Updated front/rear PNGs confirmed. Preview commit fast-forwarded. Physical fit/load and Bambu GUI import remain unverified.
+
+## fan-first-merge — fixed curved enclosure with direct under-DGX airflow
+Outcome: new v14, one DGX over its PSU; fixed shelf and seven-fan plate; front-to-back troughs; full-outline removable LCD face, 3 mm mounting holes, 25.4 mm clear gap between LCD hardware and fans. Print fan plate first.
+Non-goals: modify historical v13/four-bay designs, send a print job, change hardware envelopes, add dependencies.
+Files: build_acer_v14.py, acer-dgx-enclosure-v14.scad/.md, concept-v14/package_plates.cjs, build.sh, generate.bat, README.md, plan.md.
+## Locked decisions (user-confirmed; do not revisit)
+- 2026-11-22: "One DGX above its power supply, like the curved v13 enclosure."
+- 2026-11-22: "Use seven fans for direct airflow above and below the DGX."
+## Verified facts
+- C:/dev/10-inch-unibody-rack/build_acer_v13.py defines 248 mm maximum bowed width, depth 281.85 mm, DGX 150 x 150 x 50.5 mm.
+- acer_four_bay_geometry.py has continuous retaining walls and a provisional 72 x 162 x 23 mm PSU envelope; reuse this latest envelope.
+- waveshare-7inch-lcd-display-b.md supplies LCD board 164.9 x 124.27 x 8.3 and mounting pitch 156.9 x 114.96 mm.
+- Existing release workflow runs build.sh on master; local CadQuery 2.8 dependency and Bambu H2D profile exist.
+Assumptions: 1 inch is clear distance from rear LCD hardware to nearest fan face. The front cap is a separate print; main body depth stays within H2D bounds. Raised retaining walls borrow the four-bay design principle, while keeping the explicitly selected vertical layout.
+### fan-first-model — create and verify geometry
+- [x] fan-first-source — create new revision, preserve historical designs and unrelated worktree changes.
+- [x] fan-first-proof — uv run --python 3.13 --with cadquery==2.8.0 python build_acer_v14.py exits 0; solid, fit, trough continuity, hole and mesh checks pass.
+### fan-first-delivery — inspect and deliver
+Depends on: fan-first-model
+- [x] fan-first-slice — package two plates and Bambu automatic-support audit passes, within H2D bounds.
+- [x] fan-first-open — open verified two-plate project in Bambu Studio using direct CLI launch, without printing.
+- [ ] fan-first-publish — git diff --check, focused commit/push, workflow reaches terminal success.
+## Stop conditions (only these)
+Missing credentials, unrelated destructive action, material scope contradiction. No printing authorized.
+Job policy: each hidden build/slicer gets captured log, exit code, PID and 600-second timeout. Maximum two corrected retries per deterministic failure; no blind retries. CI monitor all terminal outcomes and correct in-scope failures at most twice. Existing sessions preserved.
+## Execution log
+- 2026-11-22: Read v13 CAD, latest four-bay geometry, hardware reference, build scripts, packaging and support audit. User confirmed vertical layout and seven fans. Unrelated CLAUDE.md, agents.md and two concept-v13 logs preserved.
+
+- 2026-11-22: v14 build PID 54728 exited 0. Valid single solids; closed connected meshes; main bounds 248 x 168 x 281.85, cap 248 x 168 x 57.7 mm. Seven fan bodies clear all parts; LCD hardware-to-fan clear gap 25.4 mm. Fan bodies mount on front of integral plate, inside cap. Audit launched with tracked PID 14204.
+
+- 2026-11-22: Initial support audit exited 1: 907 support extrusion moves beneath shelf/guide starts just behind fan apertures. Corrected root geometry with 45-degree conical transitions behind fan and screw openings. First corrected build started, PID 8256. No support settings disabled.
+
+- 2026-11-22: Corrected automatic audit still detected supports at fan transitions. Second corrected attempt uses 30-degree transitions from the print axis, matching the historical v13 mount angle and leaving margin below the 45-degree threshold. PID 8536.
+
+- 2026-11-22: Final 30-degree model produces zero support G-code features/extrusions and used_for_support=false for every filament on both plates. The inherited checker incorrectly required support_used=false while supports are enabled. Verified upstream https://github.com/bambulab/BambuStudio/blob/master/src/libslic3r/PrintApply.cpp lines 1332-1336 and 2331: m_support_used tracks enable_support. Corrected v14 checker to require automatic support enabled at 45 degrees, actual feature markers, zero support sections/extrusions and no filament support consumption. Existing v13 checker untouched. Audit exits 0.
+
+- 2026-11-22: Fan-first STL mesh checks pass: body 47794 facets, cap 13560 facets; exact CAD bounds 248 x 168 x 281.85 and 248 x 168 x 57.7 mm. Both auto-sliced plates inside build area, zero support features and consumption. Bambu launched with project, PID 45132. Computer-use native pipe unavailable; UI verification pending fallback.
+
+- 2026-11-22: Bambu GUI launch completed. Native computer-use pipe unavailable on both supported clients; visual import verification unavailable. No print sent. Final front/rear OpenSCAD renders exited 0. Source and slicer checks complete.
+
+- 2026-11-22: tasklist confirmed window title "acer-dgx-enclosure-v14-separate-plates - BambuStudio". The requested project is open; viewport inspection is unavailable. git diff --cached --check passed.

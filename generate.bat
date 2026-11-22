@@ -17,6 +17,13 @@ if exist "%USERPROFILE%\.local\bin\uv.exe" (
 )
 if errorlevel 1 exit /b 1
 
+if exist "%USERPROFILE%\.local\bin\uv.exe" (
+    "%USERPROFILE%\.local\bin\uv.exe" run --python 3.13 --with cadquery==2.8.0 python build_acer_v14.py
+) else (
+    python build_acer_v14.py
+)
+if errorlevel 1 exit /b 1
+
 REM Process all SCAD files
 for %%f in (*.scad) do (
     REM Skip shared config files - not standalone parts
@@ -25,7 +32,10 @@ for %%f in (*.scad) do (
         echo === Processing %%~nf ===
 
         echo %%~nf| findstr /b /c:"waveshare-7inch-lcd-case-" >nul
-        if errorlevel 1 (
+        if "%%~nf"=="acer-dgx-enclosure-v14" (
+            copy /y output\acer-v14\shell.stl %OUTPUT_DIR%\stl\%%~nf-shell.stl >nul
+            copy /y output\acer-v14\lcd.stl %OUTPUT_DIR%\stl\%%~nf-lcd.stl >nul
+        ) else if errorlevel 1 (
             echo   Building STL...
             %OPENSCAD% --export-format binstl -o %OUTPUT_DIR%\stl\%%~nf.stl "%%f"
         ) else (
